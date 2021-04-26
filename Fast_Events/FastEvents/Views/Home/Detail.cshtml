@@ -6,44 +6,43 @@
 <div>
     <div class="row">
         
-        <div class="col">
+        <div class="col pt-4">
             <img src="@Html.DisplayFor(model => model.ImagePath)" alt="Event Image" width="600px"/>
         </div>
 
         <div class="col">
             <table class="table table-borderless">
                 <tbody>
-                <tr>
-                    <th>Name</th>
-                    <td>Fast event 1</td>
-                </tr>
-                <tr>
-                    <th>Category</th>
-                    <td>Techno party</td>
-                </tr>
-                <tr>
-                    <th>Places</th>
-                    <td>60/200</td>
-                </tr>
-                <tr>
-                    <th>Location</th>
-                    <td>
-                        <a href="@Html.DisplayFor(model => model.GoogleMapLink)" target="_blank">
-                            1 Rue Voltaire, 94270, Le Kremlin Bicetre
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Date</th>
-                    <td>04/09/2021</td>
-                </tr>
-                @if (Model.IsOwner)
-                {
                     <tr>
-                        <th>Event Id</th>
-                        <td>132564897532</td>
+                        <td colspan="2" class="h2">Fast event 1</td>
                     </tr>
-                }
+                    <tr>
+                        <th>Category</th>
+                        <td>Techno party</td>
+                    </tr>
+                    <tr>
+                        <th>Places</th>
+                        <td>60/200</td>
+                    </tr>
+                    <tr>
+                        <th>Location</th>
+                        <td>
+                            <a href="@Html.DisplayFor(model => model.GoogleMapLink)" target="_blank">
+                                1 Rue Voltaire, 94270, Le Kremlin Bicetre
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <td>04/09/2021</td>
+                    </tr>
+                    @if (Model.IsOwner)
+                    {
+                        <tr>
+                            <th>Event Id</th>
+                            <td>132564897532</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -81,7 +80,7 @@
                         This will remove the event and nobody will be able to see it anymore.
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abort</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
                         <button type="button" class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">Yes, cancel the event</button>
                     </div>
                 </div>

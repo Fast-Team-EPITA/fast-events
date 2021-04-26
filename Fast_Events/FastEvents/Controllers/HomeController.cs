@@ -41,7 +41,8 @@ namespace FastEvents.Controllers
 
         public IActionResult Tickets()
         {
-            return View();
+            var model = new TicketsViewModel();
+            return View(model);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
