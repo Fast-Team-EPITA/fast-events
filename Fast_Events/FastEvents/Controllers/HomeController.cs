@@ -28,12 +28,13 @@ namespace FastEvents.Controllers
             return View();
         }
 
-        public IActionResult EventDetail()
+        public IActionResult Detail()
         {
-            return View();
+            var model = new EventDetailViewModel();
+            return View(model);
         }
 
-        public IActionResult EventCreate()
+        public IActionResult CreateOrEdit()
         {
             return View();
         }
