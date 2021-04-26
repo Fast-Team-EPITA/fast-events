@@ -1,4 +1,4 @@
-﻿using fast_events.Models;
+﻿using Fast_Events.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace fast_events.Controllers
+namespace Fast_Events.Controllers
 {
     public class HomeController : Controller
     {
