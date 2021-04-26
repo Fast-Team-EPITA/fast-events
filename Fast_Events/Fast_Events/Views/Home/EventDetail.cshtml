@@ -1,0 +1,103 @@
+﻿@page
+@model Fast_Events.Views.Home.EventDetail
+
+@{
+    var imagePath = @"..\Resources\Images\" + "event_place_holder.jpg";
+    var isOwner = true;
+    var location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre".Replace(" ", "+");
+    var googleMapLink = "https://www.google.com/maps/search/?api=1&query=" + location;
+}
+
+
+<div>
+    <div class="row">
+        
+        <div class="col">
+            <img src="@imagePath" alt="Event Image" width="600px"/>
+        </div>
+
+        <div class="col">
+            <table class="table table-borderless">
+                <tbody>
+                <tr>
+                    <th>Name</th>
+                    <td>Fast event 1</td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>Techno party</td>
+                </tr>
+                <tr>
+                    <th>Places</th>
+                    <td>60/200</td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td>
+                        <a href="@googleMapLink" target="_blank">
+                            1 Rue Voltaire, 94270, Le Kremlin Bicetre
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Date</th>
+                    <td>04/09/2021</td>
+                </tr>
+                @if (isOwner)
+                {
+                    <tr>
+                        <th>Event Id</th>
+                        <td>132564897532</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">
+                Description
+            </h5>
+            <p class="card-text">
+                This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !
+            </p>
+        </div>
+    </div>
+    
+    @if (isOwner)
+    {
+        <div class="text-right">
+            <button type="button" class="btn btn-light btn-md m-2">Edit Event</button>
+
+            <button type="button" class="btn btn-danger btn-md m-2" data-toggle="modal" data-target="#cancelEventModal">Cancel Event</button>
+            
+            <div class="modal fade" id="cancelEventModal" tabindex="-1" role="dialog" aria-labelledby="cancelEventModal" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cancelEventModalLabel">Cancel Event</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to cancel this event ?
+                            This will remove the event and nobody will be able to see it anymore.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Abort</button>
+                            <button type="button" class="btn btn-primary">Yes, cancel the event</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+    <div class="text-center">
+        <button type="button" class="btn btn-primary btn-lg">Order and Download my ticket</button>
+    </div>
+
+</div>

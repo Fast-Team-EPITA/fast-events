@@ -28,6 +28,11 @@ namespace Fast_Events.Controllers
             return View();
         }
 
+        public IActionResult EventDetail()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
