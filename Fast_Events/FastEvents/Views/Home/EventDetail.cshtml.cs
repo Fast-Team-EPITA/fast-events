@@ -1,25 +1,27 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Fast_Events.Views.Home
+namespace FastEvents.Views.Home
 {
     public class EventDetailModel : PageModel
     {
-        public String imagePath { get; set; }
-        public Boolean isOwner { get; set; }
-        public String location { get; set; }
-        public String googleMapLink { get; set; }
+        public string ImagePath { get; set; }
+        public bool IsOwner { get; set; }
+        private string Location { get; set; }
+        public string GoogleMapLink { get; set; }
 
-        EventDetailModel()
+        public EventDetailModel()
         {
+            IsOwner = true;
+            ImagePath = @"..\Resources\Images\" + "event_place_holder.jpg";
+            Location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre".Replace(" ", "+");
+            GoogleMapLink = "https://www.google.com/maps/search/?api=1&query=" + Location;
         }
         
         public void OnGet()
         {
-            imagePath = @"..\Resources\Images\" + "event_place_holder.jpg";
-            isOwner = true;
-            location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre".Replace(" ", "+");
-            googleMapLink = "https://www.google.com/maps/search/?api=1&query=" + location;
         }
     }
 }

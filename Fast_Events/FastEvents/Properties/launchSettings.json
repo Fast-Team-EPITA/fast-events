@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Fast_Events": {
+    "FastEvents": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,
