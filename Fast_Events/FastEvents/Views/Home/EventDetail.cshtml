@@ -1,12 +1,15 @@
 ﻿@page
-@model Fast_Events.Views.Home.EventDetail
+@model FastEvents.Views.Home.EventDetailModel
 
+@{
+    
+}
 
 <div>
     <div class="row">
         
         <div class="col">
-            <img src="@Model.imagePath" alt="Event Image" width="600px"/>
+            <img src="@Html.DisplayFor(model => model.ImagePath)" alt="Event Image" width="600px"/>
         </div>
 
         <div class="col">
@@ -27,7 +30,7 @@
                 <tr>
                     <th>Location</th>
                     <td>
-                        <a href="@Model.googleMapLink" target="_blank">
+                        <a href="@Html.DisplayFor(model => model.GoogleMapLink)" target="_blank">
                             1 Rue Voltaire, 94270, Le Kremlin Bicetre
                         </a>
                     </td>
@@ -36,7 +39,7 @@
                     <th>Date</th>
                     <td>04/09/2021</td>
                 </tr>
-                @if (Model.isOwner)
+                @if (Model.IsOwner)
                 {
                     <tr>
                         <th>Event Id</th>
@@ -59,7 +62,7 @@
         </div>
     </div>
     
-    @if (Model.isOwner)
+    @if (Model.IsOwner)
     {
         <div class="text-right">
             <button type="button" class="btn btn-light btn-md m-2">Edit Event</button>

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Fast_Events
+namespace FastEvents
 {
     public class Program
     {

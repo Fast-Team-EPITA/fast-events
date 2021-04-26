@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fast_Events", "Fast_Events\Fast_Events.csproj", "{E98A3359-35C4-4278-86F5-16CE35510E32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastEvents", "FastEvents\FastEvents.csproj", "{E98A3359-35C4-4278-86F5-16CE35510E32}"
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DataBase", "DataBase\DataBase.sqlproj", "{88F040C8-2FD3-4C58-85C4-C6456D2DE302}"
 EndProject

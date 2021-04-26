@@ -1,6 +1,6 @@
 using System;
 
-namespace Fast_Events.Models
+namespace FastEvents.Models
 {
     public class ErrorViewModel
     {
