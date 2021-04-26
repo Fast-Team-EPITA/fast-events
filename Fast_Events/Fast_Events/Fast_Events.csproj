@@ -4,4 +4,9 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\Resources\Images\blank_place_holder.png" />
+    <None Include="wwwroot\Resources\Images\event_place_holder.jpg" />
+  </ItemGroup>
+
 </Project>
