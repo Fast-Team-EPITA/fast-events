@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Fast_Events.Views.Home
 {
-    public class EventDetail : PageModel
+    public class EventDetailModel : PageModel
     {
         public String imagePath { get; set; }
         public Boolean isOwner { get; set; }
         public String location { get; set; }
         public String googleMapLink { get; set; }
 
-        EventDetail()
+        EventDetailModel()
         {
         }
         
