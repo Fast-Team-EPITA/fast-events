@@ -1,19 +1,12 @@
 ﻿@page
 @model Fast_Events.Views.Home.EventDetail
 
-@{
-    var imagePath = @"..\Resources\Images\" + "event_place_holder.jpg";
-    var isOwner = true;
-    var location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre".Replace(" ", "+");
-    var googleMapLink = "https://www.google.com/maps/search/?api=1&query=" + location;
-}
-
 
 <div>
     <div class="row">
         
         <div class="col">
-            <img src="@imagePath" alt="Event Image" width="600px"/>
+            <img src="@Model.imagePath" alt="Event Image" width="600px"/>
         </div>
 
         <div class="col">
@@ -34,7 +27,7 @@
                 <tr>
                     <th>Location</th>
                     <td>
-                        <a href="@googleMapLink" target="_blank">
+                        <a href="@Model.googleMapLink" target="_blank">
                             1 Rue Voltaire, 94270, Le Kremlin Bicetre
                         </a>
                     </td>
@@ -43,7 +36,7 @@
                     <th>Date</th>
                     <td>04/09/2021</td>
                 </tr>
-                @if (isOwner)
+                @if (Model.isOwner)
                 {
                     <tr>
                         <th>Event Id</th>
@@ -55,7 +48,7 @@
         </div>
     </div>
 
-    <div class="card">
+    <div class="card m-4">
         <div class="card-body">
             <h5 class="card-title">
                 Description
@@ -66,7 +59,7 @@
         </div>
     </div>
     
-    @if (isOwner)
+    @if (Model.isOwner)
     {
         <div class="text-right">
             <button type="button" class="btn btn-light btn-md m-2">Edit Event</button>
@@ -96,7 +89,7 @@
         </div>
     }
     
-    <div class="text-center">
+    <div class="text-center mt-2">
         <button type="button" class="btn btn-primary btn-lg">Order and Download my ticket</button>
     </div>
 
