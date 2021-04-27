@@ -5,24 +5,24 @@ using System.Threading.Tasks;
 
 namespace FastEvents.Models
 {
-    enum Category
+    public enum Category
     {
 
     }
     public class Event : Interfaces.IObjectWithId
     {
         public long id { get; set; }
-        string name { get; set; }
-        string organizer { get; set; }
-        DateTime startDate { get; set; }
-        DateTime endTime { get; set; }
-        int capacity { get; set; }
-        string location { get; set; }
-        string description { get; set; }
-        string pictureFilename { get; set; }
-        string ownerUuid { get; set; }
-        Category category { get; set; }
-        int nbAvailableTickets { get; set; }
+        public string name { get; set; }
+        public string organizer { get; set; }
+        public DateTime startDate { get; set; }
+        public DateTime endTime { get; set; }
+        public int capacity { get; set; }
+        public string location { get; set; }
+        public string description { get; set; }
+        public string pictureFilename { get; set; }
+        public string ownerUuid { get; set; }
+        public Category category { get; set; }
+        public int nbAvailableTickets { get; set; }
 
     }
 }

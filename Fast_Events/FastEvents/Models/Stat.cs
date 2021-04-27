@@ -8,7 +8,7 @@ namespace FastEvents.Models
     public class Stat : Interfaces.IObjectWithId
     {
         public long id { get; set; }
-        long eventId { get; set; }
-        DateTime date { get; set; }
+        public long eventId { get; set; }
+        public DateTime date { get; set; }
     }
 }

@@ -8,6 +8,6 @@ namespace FastEvents.Models
     public class StatByEventModel : Interfaces.IObjectWithId
     {
         public long id { get; set; }
-        int views { get; set; }
+        public int views { get; set; }
     }
 }

@@ -8,8 +8,8 @@ namespace FastEvents.Models
     public class Ticket : Interfaces.IObjectWithId
     {
         public long id { get; set; }
-        long eventId { get; set; }
-        string ownerUuid { get; set; }
-        string qrcFilename { get; set; }
+        public long eventId { get; set; }
+        public string ownerUuid { get; set; }
+        public string qrcFilename { get; set; }
     }
 }
