@@ -31,7 +31,7 @@ namespace FastEvents.Controllers
         /**
          *  Misc
          */
-        private void GetUserId()
+        private void GetUserIdFromCookies()
         {
             var (key, value) = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "userId");
 
@@ -52,7 +52,7 @@ namespace FastEvents.Controllers
          */
         public IActionResult Index()
         {
-            GetUserId();
+            GetUserIdFromCookies();
             return View();
         }
 
@@ -63,18 +63,28 @@ namespace FastEvents.Controllers
 
         public IActionResult Detail(string eventId)
         {
-            var model = new EventDetailViewModel(eventId);
+            //TODO Generate model using eventId
+            var model = new DetailViewModel();
             return View(model);
         }
 
-        public IActionResult CreateOrEdit()
+        public IActionResult CreateOrEdit(string eventId)
         {
-            return View();
+            CreateOrEditViewModel model;
+            if (eventId != null)
+                //TODO Generate model for edit screen
+                model = new CreateOrEditViewModel();
+            else
+                //TODO Generate model for create screen
+                model = new CreateOrEditViewModel();
+            return View(model);
         }
 
-        public IActionResult Tickets()
+        public IActionResult Tickets(string userId)
         {
-            var model = new TicketsViewModel();
+            var tickets = new List<string> {"", ""};
+            //TODO Add all tickets for this userId
+            var model = new TicketsViewModel(tickets);
             return View(model);
         }
 

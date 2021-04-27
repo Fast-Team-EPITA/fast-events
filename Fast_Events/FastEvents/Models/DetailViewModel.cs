@@ -1,13 +1,15 @@
 ﻿namespace FastEvents.Models
 {
-    public class EventDetailViewModel
+    public class DetailViewModel
     {
         public string ImagePath { get; set; }
         public bool IsOwner { get; set; }
         private string Location { get; set; }
         public string GoogleMapLink { get; set; }
 
-        public EventDetailViewModel(string eventId)
+        public string EventId { get; set; }
+
+        public DetailViewModel()
         {
             IsOwner = true;
             ImagePath = @"..\Resources\Images\" + "event_place_holder.jpg";

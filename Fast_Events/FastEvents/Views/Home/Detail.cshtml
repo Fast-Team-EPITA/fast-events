@@ -1,4 +1,4 @@
-﻿@model EventDetailViewModel
+﻿@model DetailViewModel
 
 @{
 }
@@ -61,14 +61,14 @@
     
     @if (Model.IsOwner)
     {
-        <div class="text-right">
-            <button type="button" class="btn btn-light btn-md m-2" asp-action="CreateOrEdit">
+        <form method="post" class="text-right">
+            <button class="btn btn-light btn-md m-2" asp-action="CreateOrEdit" asp-route-eventId="@Model.EventId">
                 Edit Event
             </button>
             <button type="button" class="btn btn-danger btn-md m-2" data-toggle="modal" data-target="#cancelEventModal">
                 Cancel Event
             </button>
-        </div>
+        </form>
             
         <div class="modal fade" id="cancelEventModal" tabindex="-1" role="dialog" aria-labelledby="cancelEventModal" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -83,14 +83,14 @@
                         Are you sure you want to cancel this event ?
                         This will remove the event and nobody will be able to see it anymore.
                     </div>
-                    <div class="modal-footer">
+                    <form method="post" class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             No
                         </button>
-                        <button type="button" class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">
+                        <button class="btn btn-primary" asp-controller="Home" asp-action="Index">
                             Yes, cancel the event
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

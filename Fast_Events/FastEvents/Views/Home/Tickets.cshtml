@@ -35,25 +35,25 @@
                 
                 <button class="btn btn-danger btn-lg m-4" data-toggle="modal" data-target="#cancelReservationModal">Cancel my reservation</button>
                 <div class="modal fade" id="cancelReservationModal" tabindex="-1" role="dialog" aria-labelledby="cancelReservationModal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="cancelReservationModalLabel">Cancel Reservation</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Are you sure you want to cancel your reservation ?
-                                        Your QR code will no longer be usable.
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                        <button type="button" class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">Yes, cancel my reservation</button>
-                                    </div>
-                                </div>
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="cancelReservationModalLabel">Cancel Reservation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
+                            <div class="modal-body">
+                                Are you sure you want to cancel your reservation ?
+                                Your QR code will no longer be usable.
+                            </div>
+                            <form method="post" class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                                <button class="btn btn-primary" asp-action="Index">Yes, cancel my reservation</button>
+                            </form>
                         </div>
+                    </div>
+                </div>
             </div>
         </div>
     }

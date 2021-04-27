@@ -7,12 +7,9 @@ namespace FastEvents.Models
     {
         public List<string> Tickets { get; set; }
 
-        public TicketsViewModel()
+        public TicketsViewModel(List<string> tickets)
         {
-            Tickets = new List<string>();
-            Tickets.Add("");
-            Tickets.Add("");
-            Tickets.Add("");
+            Tickets = tickets;
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace FastEvents.Models
 {
-    public class EventCreateViewModel
+    public class CreateOrEditViewModel
     {
         
     }
