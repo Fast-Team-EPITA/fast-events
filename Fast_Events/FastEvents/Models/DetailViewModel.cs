@@ -7,7 +7,7 @@
         private string Location { get; set; }
         public string GoogleMapLink { get; set; }
 
-        public EventDetailViewModel()
+        public EventDetailViewModel(string eventId)
         {
             IsOwner = true;
             ImagePath = @"..\Resources\Images\" + "event_place_holder.jpg";

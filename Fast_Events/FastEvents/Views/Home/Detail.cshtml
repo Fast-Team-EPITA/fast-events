@@ -62,8 +62,12 @@
     @if (Model.IsOwner)
     {
         <div class="text-right">
-            <button type="button" class="btn btn-light btn-md m-2" asp-area="" asp-controller="Home" asp-action="CreateOrEdit">Edit Event</button>
-            <button type="button" class="btn btn-danger btn-md m-2" data-toggle="modal" data-target="#cancelEventModal">Cancel Event</button>
+            <button type="button" class="btn btn-light btn-md m-2" asp-action="CreateOrEdit">
+                Edit Event
+            </button>
+            <button type="button" class="btn btn-danger btn-md m-2" data-toggle="modal" data-target="#cancelEventModal">
+                Cancel Event
+            </button>
         </div>
             
         <div class="modal fade" id="cancelEventModal" tabindex="-1" role="dialog" aria-labelledby="cancelEventModal" aria-hidden="true">
@@ -80,16 +84,22 @@
                         This will remove the event and nobody will be able to see it anymore.
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">Yes, cancel the event</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            No
+                        </button>
+                        <button type="button" class="btn btn-primary" asp-area="" asp-controller="Home" asp-action="Index">
+                            Yes, cancel the event
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     }
     
-    <div class="text-center mt-2">
-        <button type="button" class="btn btn-primary btn-lg">Order and Download my ticket</button>
-    </div>
+    <form class="text-center mt-2" method="post">
+        <button class="btn btn-primary btn-lg" asp-controller="Home" asp-action="GenerateAndDownloadQrCode">
+            Order and Download my ticket
+        </button>
+    </form>
 
 </div>
