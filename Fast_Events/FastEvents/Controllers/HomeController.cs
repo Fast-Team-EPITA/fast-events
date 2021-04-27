@@ -34,16 +34,13 @@ namespace FastEvents.Controllers
         private void GetUserIdFromCookies()
         {
             var (key, value) = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "userId");
-
             if (key == null)
             {
                 _userId = Guid.NewGuid().ToString();
                 HttpContext.Response.Cookies.Append("userId", _userId);
             }
             else
-            {
                 _userId = value;
-            }
         }
 
         
@@ -64,7 +61,22 @@ namespace FastEvents.Controllers
         public IActionResult Detail(string eventId)
         {
             //TODO Generate model using eventId
-            var model = new DetailViewModel();
+            var selectedEvent = new Event()
+            {
+                name = "Fast Event 1",
+                organizer = "Fast Team",
+                startDate = DateTime.Now,
+                endDate = DateTime.Now.AddDays(1),
+                capacity = 100,
+                location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
+                description = "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
+                pictureFilename = "event_place_holder.jpg",
+                ownerUuid = "",//_userId,
+                category = Category.Concert,
+                nbAvailableTickets = 30
+                
+            };
+            var model = new DetailViewModel(selectedEvent, selectedEvent.ownerUuid == _userId);
             return View(model);
         }
 
@@ -82,7 +94,7 @@ namespace FastEvents.Controllers
 
         public IActionResult Tickets(string userId)
         {
-            var tickets = new List<Ticket> {/*new Ticket() {eventId = 1l}*/};
+            var tickets = new List<Ticket> {new() {eventId = 1L, qrcFilename = "1.jpg", eventName = "Fast Event 1"}};
             //TODO Add all tickets for this userId
             var model = new TicketsViewModel(tickets);
             return View(model);

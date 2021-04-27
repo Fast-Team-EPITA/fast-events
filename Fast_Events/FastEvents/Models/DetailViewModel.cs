@@ -4,17 +4,15 @@
     {
         public string ImagePath { get; set; }
         public bool IsOwner { get; set; }
-        private string Location { get; set; }
         public string GoogleMapLink { get; set; }
+        public Event Event { get; set; }
 
-        public string EventId { get; set; }
-
-        public DetailViewModel()
+        public DetailViewModel(Event @event, bool isOwner)
         {
-            IsOwner = true;
-            ImagePath = @"..\Resources\Images\" + "event_place_holder.jpg";
-            Location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre".Replace(" ", "+");
-            GoogleMapLink = "https://www.google.com/maps/search/?api=1&query=" + Location;
+            Event = @event;
+            IsOwner = isOwner;
+            ImagePath = @"..\Resources\Images\" + Event.pictureFilename;
+            GoogleMapLink = "https://www.google.com/maps/search/?api=1&query=" + Event.location.Replace(" ", "+");
         }
     }
 }

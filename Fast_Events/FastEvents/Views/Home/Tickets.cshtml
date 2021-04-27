@@ -10,7 +10,7 @@
         <div class="card">
             <div class="row card-body">
                 
-                <a class="col" asp-action="DownloadQrCode" asp-route-qrCodeFilename="1.jpg">
+                <a class="col" asp-action="DownloadQrCode" asp-route-qrCodeFilename="@ticket.qrcFilename">
                     <img src="/Resources/Images/qr_code.png" alt="QR Code" width="200px">
                 </a>
                 
@@ -18,15 +18,13 @@
                     <table class="table table-borderless">
                         <tbody>
                             <tr>
-                                <td colspan="2" class="h2">Fast event 1</td>
+                                <td colspan="2" class="h2">@ticket.eventName</td>
                             </tr>
                             <tr>
-                                <th>Date</th>
-                                <td>04/09/2021</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <button class="btn btn-primary btn-md">Go to event page</button>
+                                <td>
+                                    <form method="post" colspan="2">
+                                        <button class="btn btn-primary btn-md" asp-action="Detail" asp-route-eventId="@ticket.eventId">Go to event page</button>
+                                    </form>
                                 </td>
                             </tr>
                         </tbody>

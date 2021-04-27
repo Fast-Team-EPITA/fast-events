@@ -10,6 +10,7 @@ namespace FastEvents.Models
         public long id { get; set; }
         public long eventId { get; set; }
         public string ownerUuid { get; set; }
+        public string eventName { get; set; }
         public string qrcFilename { get; set; }
     }
 }

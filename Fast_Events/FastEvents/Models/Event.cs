@@ -7,15 +7,18 @@ namespace FastEvents.Models
 {
     public enum Category
     {
-
+        Concert,
+        Conference,
+        OpenAir
     }
-    public class Event : Interfaces.IObjectWithId
+    
+    public class Event: Interfaces.IObjectWithId
     {
         public long id { get; set; }
         public string name { get; set; }
         public string organizer { get; set; }
         public DateTime startDate { get; set; }
-        public DateTime endTime { get; set; }
+        public DateTime endDate { get; set; }
         public int capacity { get; set; }
         public string location { get; set; }
         public string description { get; set; }
