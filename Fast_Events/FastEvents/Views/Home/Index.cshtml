@@ -1,9 +1,11 @@
-﻿@{
+﻿@model EventDetailViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="position: relative">
         <div class="dropdown m-2">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Filtre
@@ -38,8 +40,90 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 
-        <button class="btn btn-outline-success my-2 my-sm-0" style="margin: 10px">My tickets</button>
+        <div style="position: absolute; right: 10px">
+            <button class="btn btn-outline-success my-2 my-sm-0" style="margin: 10px">My tickets</button>
 
-        <button class="btn btn-outline-success my-2 my-sm-0" style="margin: 10px">Create an event</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" style="margin: 10px">Create an event</button>
+        </div>
     </nav>
+
+    <div class="border mt-2" style="display: flex; flex-direction: row; position: relative">
+        <div class="p-2" style="position: relative">
+            @if (true) // A remplacer par if (nbplace = max)
+            {
+                <img src="..\Resources\Images\event_place_holder.jpg" style="filter: grayscale()" alt="Event Image" width="300px"/>
+                <span style="color: red; font-size: 4rem; font-weight: bold; position: absolute; left: 28%; top: 20%">FULL</span>
+            }
+            else
+            {
+                <img src="..\Resources\Images\event_place_holder.jpg" alt="Event Image" width="300px" />
+            }
+        </div>
+
+        <div class="ml-2">
+            <h2>Fast event 1</h2>
+            <h5>Organiser</h5>
+            <h5>Date</h5>
+            <h5>Places</h5>
+            <h5>Category</h5>
+        </div>
+
+        <div style="position: absolute; right: 10px; top: 40%">
+            <button class="btn btn-outline-success">Go to event</button>
+        </div>
+    </div>
+
+    <div class="border mt-2" style="display: flex; flex-direction: row; position: relative">
+        <div class="p-2">
+            <img src="..\Resources\Images\event_place_holder.jpg" alt="Event Image" width="300px" />
+        </div>
+
+        <div class="ml-2">
+            <h2>Fast event 1</h2>
+            <h5>Organiser</h5>
+            <h5>Date</h5>
+            <h5>Places</h5>
+            <h5>Category</h5>
+        </div>
+
+        <div style="position: absolute; right: 10px; top: 40%">
+            <button class="btn btn-outline-success">Go to event</button>
+        </div>
+    </div>
+
+    <div class="border mt-2" style="display: flex; flex-direction: row; position: relative">
+        <div class="p-2">
+            <img src="..\Resources\Images\event_place_holder.jpg" alt="Event Image" width="300px" />
+        </div>
+
+        <div class="ml-2">
+            <h2>Fast event 1</h2>
+            <h5>Organiser</h5>
+            <h5>Date</h5>
+            <h5>Places</h5>
+            <h5>Category</h5>
+        </div>
+
+        <div style="position: absolute; right: 10px; top: 40%">
+            <button class="btn btn-outline-success">Go to event</button>
+        </div>
+    </div>
+
+    <div class="border mt-2" style="display: flex; flex-direction: row; position: relative">
+        <div class="p-2">
+            <img src="..\Resources\Images\event_place_holder.jpg" alt="Event Image" width="300px" />
+        </div>
+
+        <div class="ml-2">
+            <h2>Fast event 1</h2>
+            <h5>Organiser</h5>
+            <h5>Date</h5>
+            <h5>Places</h5>
+            <h5>Category</h5>
+        </div>
+
+        <div style="position: absolute; right: 10px; top: 40%">
+            <button class="btn btn-outline-success">Go to event</button>
+        </div>
+    </div>
 </div>
