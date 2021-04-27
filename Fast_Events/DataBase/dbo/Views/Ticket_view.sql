@@ -1,10 +1,11 @@
-﻿CREATE VIEW dbo.Event_view
+﻿CREATE VIEW dbo.Ticket_view
 AS
-SELECT        TOP (100) PERCENT COUNT(*) AS number_view, dbo.Event.name
-FROM            dbo.Stat INNER JOIN
-                         dbo.Event ON dbo.Stat.event_id = dbo.Event.id
-GROUP BY dbo.Stat.event_id, dbo.Event.name
-ORDER BY dbo.Event.name
+SELECT        dbo.Event.name, dbo.Tickets.*
+FROM            dbo.Event INNER JOIN
+                         dbo.Tickets ON dbo.Event.id = dbo.Tickets.event_id
+GO
+EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Ticket_view';
+
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -78,22 +79,22 @@ Begin DesignProperties =
          Left = 0
       End
       Begin Tables = 
-         Begin Table = "Stat"
-            Begin Extent = 
-               Top = 6
-               Left = 38
-               Bottom = 119
-               Right = 246
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
          Begin Table = "Event"
             Begin Extent = 
-               Top = 6
-               Left = 284
-               Bottom = 136
-               Right = 508
+               Top = 31
+               Left = 35
+               Bottom = 161
+               Right = 243
+            End
+            DisplayFlags = 280
+            TopColumn = 2
+         End
+         Begin Table = "Tickets"
+            Begin Extent = 
+               Top = 0
+               Left = 732
+               Bottom = 130
+               Right = 940
             End
             DisplayFlags = 280
             TopColumn = 0
@@ -107,7 +108,7 @@ Begin DesignProperties =
       End
    End
    Begin CriteriaPane = 
-      Begin ColumnWidths = 12
+      Begin ColumnWidths = 11
          Column = 1440
          Alias = 900
          Table = 1170
@@ -124,11 +125,5 @@ Begin DesignProperties =
       End
    End
 End
-', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Event_view';
-
-
-
-
-GO
-EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Event_view';
+', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Ticket_view';
 
