@@ -5,9 +5,9 @@ namespace FastEvents.Models
 {
     public class TicketsViewModel
     {
-        public List<string> Tickets { get; set; }
+        public List<Ticket> Tickets { get; set; }
 
-        public TicketsViewModel(List<string> tickets)
+        public TicketsViewModel(List<Ticket> tickets)
         {
             Tickets = tickets;
         }

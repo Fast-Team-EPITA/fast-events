@@ -9,7 +9,7 @@ namespace FastEvents.Models
     {
 
     }
-    public class EventModel : Interfaces.IObjectWithId
+    public class Event : Interfaces.IObjectWithId
     {
         public long id { get; set; }
         string name { get; set; }

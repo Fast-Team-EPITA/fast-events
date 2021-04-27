@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FastEvents.Models
 {
-    public class TicketModel : Interfaces.IObjectWithId
+    public class Ticket : Interfaces.IObjectWithId
     {
         public long id { get; set; }
         long eventId { get; set; }

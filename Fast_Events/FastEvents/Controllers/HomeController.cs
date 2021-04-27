@@ -82,7 +82,7 @@ namespace FastEvents.Controllers
 
         public IActionResult Tickets(string userId)
         {
-            var tickets = new List<string> {"", ""};
+            var tickets = new List<Ticket> {/*new Ticket() {eventId = 1l}*/};
             //TODO Add all tickets for this userId
             var model = new TicketsViewModel(tickets);
             return View(model);

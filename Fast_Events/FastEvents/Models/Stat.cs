@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FastEvents.Models
 {
-    public class StatModel : Interfaces.IObjectWithId
+    public class Stat : Interfaces.IObjectWithId
     {
         public long id { get; set; }
         long eventId { get; set; }
