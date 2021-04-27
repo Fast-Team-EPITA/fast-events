@@ -1,9 +1,10 @@
 ﻿CREATE VIEW dbo.Event_view
 AS
-SELECT        TOP (100) PERCENT COUNT(*) AS number_view
-FROM            dbo.Stat
-GROUP BY event_id
-ORDER BY number_view
+SELECT        TOP (100) PERCENT COUNT(*) AS number_view, dbo.Event.name
+FROM            dbo.Stat INNER JOIN
+                         dbo.Event ON dbo.Stat.event_id = dbo.Event.id
+GROUP BY dbo.Stat.event_id, dbo.Event.name
+ORDER BY dbo.Event.name
 
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPane1', @value = N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
@@ -87,6 +88,16 @@ Begin DesignProperties =
             DisplayFlags = 280
             TopColumn = 0
          End
+         Begin Table = "Event"
+            Begin Extent = 
+               Top = 6
+               Left = 284
+               Bottom = 136
+               Right = 508
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
       End
    End
    Begin SQLPane = 
@@ -114,6 +125,8 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'Event_view';
+
+
 
 
 GO

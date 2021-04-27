@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FastEvents.DataAccess.Interfaces
 {
-    interface IStatRepository :
+    interface IStatRepository 
     {
     }
 }

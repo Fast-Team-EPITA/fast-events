@@ -1,6 +1,6 @@
 ﻿CREATE VIEW dbo.Ticket_view
 AS
-SELECT        dbo.Event.name, dbo.Event.start_date, dbo.Event.end_date
+SELECT        dbo.Event.name, dbo.Tickets.*
 FROM            dbo.Event INNER JOIN
                          dbo.Tickets ON dbo.Event.id = dbo.Tickets.event_id
 GO
