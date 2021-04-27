@@ -67,5 +67,6 @@
     <Build Include="dbo\Tables\Stat.sql" />
     <Build Include="dbo\Tables\Tickets.sql" />
     <Build Include="dbo\Views\Event_view.sql" />
+    <Build Include="dbo\Views\Ticket_view.sql" />
   </ItemGroup>
 </Project>
