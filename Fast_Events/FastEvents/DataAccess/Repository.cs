@@ -4,20 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Logging;
 
 namespace FastEvents.DataAccess
 {
     public class Repository<DBEntity, ModelEntity> : IRepository<DBEntity, ModelEntity>
       where DBEntity : class, new()
-      where ModelEntity : class, dbo.Interface.IObjectWithId, new()
+      where ModelEntity : class, dbo.Interfaces.IObjectWithId, new()
 
     {
         private DbSet<DBEntity> _set;
-        protected EfModels.SmartLinksContext _context;
+        protected EfModels.FastEventContext _context;
         protected ILogger _logger;
         protected readonly IMapper _mapper;
-        public Repository(EfModels.SmartLinksContext context, ILogger logger, IMapper mapper)
+        public Repository(EfModels.FastEventContext context, ILogger logger, IMapper mapper)
         {
             _mapper = mapper;
             _context = context;
@@ -69,7 +69,7 @@ namespace FastEvents.DataAccess
 
         public virtual async Task<ModelEntity> Update(ModelEntity entity)
         {
-            DBEntity dbEntity = _set.Find(entity.Id);
+            DBEntity dbEntity = _set.Find(entity.id);
 
 
             if (dbEntity == null)

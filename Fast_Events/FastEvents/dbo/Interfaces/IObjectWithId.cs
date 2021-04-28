@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FastEvents.dbo.Interfaces
 {
-    interface IObjectWithId
+    public interface IObjectWithId
     {
         long id { get; set; }
     }
