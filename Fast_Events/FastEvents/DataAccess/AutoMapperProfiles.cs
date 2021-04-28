@@ -22,6 +22,7 @@ namespace FastEvents.DataAccess
             CreateMap<dbo.StatByEventModel, EfModels.EventView>();
             CreateMap<EfModels.EventView, dbo.StatByEventModel>();
 
+
         }
     }
 }
