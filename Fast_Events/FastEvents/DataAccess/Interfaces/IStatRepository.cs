@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace FastEvents.DataAccess.Interfaces
 {
-    interface IStatRepository 
+    public interface IStatRepository : DataAccess.IRepository<EfModels.Stat, dbo.Stat>
     {
+        dbo.StatByEventModel GetByEvent(long eventId); // TODO changer le nom
     }
 }
