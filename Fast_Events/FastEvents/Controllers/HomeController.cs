@@ -49,8 +49,57 @@ namespace FastEvents.Controllers
          */
         public IActionResult Index()
         {
+            var event1 = new Event()
+            {
+                id = 1,
+                name = "Fast Event 1",
+                organizer = "Fast Team",
+                startDate = DateTime.Now,
+                endDate = DateTime.Now.AddDays(1),
+                capacity = 100,
+                location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
+                description = "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
+                pictureFilename = "event_place_holder.jpg",
+                ownerUuid = "",//_userId,
+                category = Category.Concert,
+                nbAvailableTickets = 30
+            };
+
+            var event2 = new Event()
+            {
+                id = 2,
+                name = "Fast Event 2",
+                organizer = "Fast Team",
+                startDate = DateTime.Now,
+                endDate = DateTime.Now.AddDays(1),
+                capacity = 50,
+                location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
+                description = "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
+                pictureFilename = "event_place_holder.jpg",
+                ownerUuid = "",//_userId,
+                category = Category.Conference,
+                nbAvailableTickets = 0
+            };
+
+            var event3 = new Event()
+            {
+                id = 3,
+                name = "Fast Event 3",
+                organizer = "Fast Team",
+                startDate = DateTime.Now,
+                endDate = DateTime.Now.AddDays(1),
+                capacity = 100,
+                location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
+                description = "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
+                pictureFilename = "event_place_holder.jpg",
+                ownerUuid = "",//_userId,
+                category = Category.OpenAir,
+                nbAvailableTickets = 10
+            };
+            var events = new List<Event> { event1, event2, event3 };
+            var model = new IndexViewModel(events);
             GetUserIdFromCookies();
-            return View();
+            return View(model);
         }
 
         public IActionResult Privacy()
@@ -85,10 +134,10 @@ namespace FastEvents.Controllers
             CreateOrEditViewModel model;
             if (eventId != null)
                 //TODO Generate model for edit screen
-                model = new CreateOrEditViewModel();
+                model = new CreateOrEditViewModel(new Event(), false);
             else
                 //TODO Generate model for create screen
-                model = new CreateOrEditViewModel();
+                model = new CreateOrEditViewModel(new Event(), true);
             return View(model);
         }
 

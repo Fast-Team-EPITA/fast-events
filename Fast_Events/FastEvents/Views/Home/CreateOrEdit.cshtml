@@ -4,32 +4,59 @@
 }
 
 <div>
-    <h1 class="mb-4" style="text-align: center">Create your own event !</h1>
+    @if (Model.Create)
+    {
+        <h1 class="mb-4" style="text-align: center">Create your own event !</h1>
+    }
+    else
+    {
+        <h1 class="mb-4" style="text-align: center">Edit your event !</h1>
+    }
     <form>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label font-weight-bold" for="eventName">Name of the event</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="eventName" placeholder="Enter the name of your event">
+        <div class="form-group row justify-content-center">
+            <label class="col-sm-3 col-form-label font-weight-bold" for="eventName">Name of the event</label>
+            <div class="col-sm-5">
+                @{
+                    var prefillName = String.IsNullOrEmpty(Model.Event.name) ? "" : Model.Event.name;
+                } 
+                <input type="text" class="form-control" id="eventName" value="@prefillName" placeholder="Enter the name of your event">
             </div>
         </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label font-weight-bold" for="organiserName">Name of the organiser</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="organiserName" placeholder="Enter the name of the organiser">
+        <div class="form-group row justify-content-center">
+            <label class="col-sm-3 col-form-label font-weight-bold" for="organiserName">Name of the organiser</label>
+            <div class="col-sm-5">
+                @{
+                    var prefillOrganizer = String.IsNullOrEmpty(Model.Event.organizer) ? "" : Model.Event.organizer;
+                }
+                <input type="text" class="form-control" id="organiserName" value="@prefillOrganizer" placeholder="Enter the name of the organiser">
             </div>
         </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label font-weight-bold" for="date">Date of the event</label>
-            <div class="col-sm-10">
-                <input type="date" class="form-control" id="date" placeholder="Enter the date of the event">
+        <div class="form-group row justify-content-center">
+            <label class="col-sm-3 col-form-label font-weight-bold" for="startDate">Start date of the event</label>
+            <div class="col-sm-5">
+                @{
+                    var prefillStartDate = Model.Event.startDate == default(DateTime) ? default(DateTime) : Model.Event.startDate;
+                }
+                <input type="date" class="form-control" id="startDate" value="@prefillStartDate" placeholder="Enter the starting date of the event">
             </div>
         </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label font-weight-bold" for="categories">Category</label>
-            <div class="col-sm-10">
+        <div class="form-group row justify-content-center">
+            <label class="col-sm-3 col-form-label font-weight-bold" for="endingDate">End date of the event</label>
+            <div class="col-sm-5">
+                @{
+                    var prefillEndDate = Model.Event.endDate == default(DateTime) ? default(DateTime) : Model.Event.endDate;
+                }
+                <input type="date" class="form-control" id="endingDate" value="@prefillEndDate" placeholder="Enter the ending date of the event">
+            </div>
+        </div>
+
+        <div class="form-group row justify-content-center">
+            <label class="col-sm-3 col-form-label font-weight-bold" for="categories">Category</label>
+            <div class="col-sm-5">
+                @*// Un peu galere de preset la categorie*@
                 <select class="form-control" id="categories">
                     <option>Category 1</option>
                     <option>Category 2</option>
@@ -39,38 +66,48 @@
             </div>
         </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label font-weight-bold" for="numberPlaces">Number of places</label>
-            <div class="col-sm-10">
-                <input type="number" class="form-control" id="numberPlaces" placeholder="Enter the number of places for the event">
+        <div class="form-group row justify-content-center">
+            <label class="col-sm-3 col-form-label font-weight-bold" for="numberPlaces">Number of places</label>
+            <div class="col-sm-5">
+                @{
+                    var prefillPlaces = Model.Event.capacity == 0 ? 0 : Model.Event.capacity;
+                }
+                <input type="number" class="form-control" id="numberPlaces" value="@prefillPlaces" placeholder="Enter the number of places for the event">
             </div>
         </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label font-weight-bold" for="localisation">Localisation of the event</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="localisation" placeholder="Enter the localisation of the event">
+        <div class="form-group row justify-content-center">
+            <label class="col-sm-3 col-form-label font-weight-bold" for="location">Location of the event</label>
+            <div class="col-sm-5">
+                @{
+                    var prefillLocation = String.IsNullOrEmpty(Model.Event.location) ? "" : Model.Event.location;
+                }
+                <input type="text" class="form-control" id="location" value="@prefillLocation" placeholder="Enter the location of the event">
             </div>
         </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label font-weight-bold" for="description">Description of the event</label>
-            <div class="col-sm-10">
-                <textarea maxlength="500" class="form-control" id="description" aria-describedby="descriptionHelp" rows="6"></textarea>
+        <div class="form-group row justify-content-center">
+            <label class="col-sm-3 col-form-label font-weight-bold" for="description">Description of the event</label>
+            <div class="col-sm-5">
+                @{
+                    var prefillDescription = String.IsNullOrEmpty(Model.Event.description) ? "" : Model.Event.description;
+                }
+                <textarea maxlength="500" class="form-control" id="description" value="@prefillDescription" aria-describedby="descriptionHelp" rows="6"></textarea>
                 <small id="descriptionHelp" class="form-text text-muted">Maximum of 500 characters</small>
             </div>
         </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label font-weight-bold" for="image">Image</label>
-            <div class="col-sm-10">
+        <div class="form-group row justify-content-center">
+            <label class="col-sm-3 col-form-label font-weight-bold" for="image">Image</label>
+            <div class="col-sm-5">
+                @*// Aucune idee de comment preset le nom du fichier*@
                 <input type="file" id="image" name="image">
             </div>
         </div>
     </form>
 
     <form class="text-center mt-4" method="post">
-        <button class="btn btn-primary btn-lg">
+        <button class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Index">
             Create the event
         </button>
     </form>

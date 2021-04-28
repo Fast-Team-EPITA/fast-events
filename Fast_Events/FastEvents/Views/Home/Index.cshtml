@@ -1,4 +1,4 @@
-﻿@model DetailViewModel
+﻿@model IndexViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -47,83 +47,52 @@
         </div>
     </nav>
 
-    <div class="border mt-2" style="display: flex; flex-direction: row; position: relative">
-        <div class="p-2" style="position: relative">
-            @if (true) // A remplacer par if (nbplace = max)
-            {
-                <img src="..\Resources\Images\event_place_holder.jpg" style="filter: grayscale()" alt="Event Image" width="300px"/>
-                <span style="color: red; font-size: 4rem; font-weight: bold; position: absolute; left: 28%; top: 20%">FULL</span>
-            }
-            else
-            {
-                <img src="..\Resources\Images\event_place_holder.jpg" alt="Event Image" width="300px" />
-            }
-        </div>
+    @foreach (var ev in Model.Events)
+    {
+        <form method="post" class="m-4 d-flex text-center">
+            <button class="btn btn-light flex-grow-1" asp-action="Detail" asp-route-eventId="@ev.id">
+                <div class="mt-2" style="display: flex; flex-direction: row; position: relative">
+                    <div class="p-2" style="position: relative">
+                        @if (ev.nbAvailableTickets == 0)
+                        {
+                            var urlPath = @"..\Resources\Images\" + ev.pictureFilename;
+                            <img src=@urlPath style="filter: grayscale()" alt="Event Image" width="400px" />
+                            <span style="color: red; font-size: 4rem; font-weight: bold; position: absolute; left: 32%; top: 25%">FULL</span>
+                        }
+                        else
+                        {
+                            var urlPath = @"..\Resources\Images\" + ev.pictureFilename;
+                            <img src=@urlPath alt="Event Image" width="400px" />
+                        }
+                    </div>
 
-        <div class="ml-2">
-            <h2>Fast event 1</h2>
-            <h5>Organiser</h5>
-            <h5>Date</h5>
-            <h5>Places</h5>
-            <h5>Category</h5>
-        </div>
-
-        <div style="position: absolute; right: 10px; top: 40%">
-            <button class="btn btn-outline-success">Go to event</button>
-        </div>
-    </div>
-
-    <div class="border mt-2" style="display: flex; flex-direction: row; position: relative">
-        <div class="p-2">
-            <img src="..\Resources\Images\event_place_holder.jpg" alt="Event Image" width="300px" />
-        </div>
-
-        <div class="ml-2">
-            <h2>Fast event 1</h2>
-            <h5>Organiser</h5>
-            <h5>Date</h5>
-            <h5>Places</h5>
-            <h5>Category</h5>
-        </div>
-
-        <div style="position: absolute; right: 10px; top: 40%">
-            <button class="btn btn-outline-success">Go to event</button>
-        </div>
-    </div>
-
-    <div class="border mt-2" style="display: flex; flex-direction: row; position: relative">
-        <div class="p-2">
-            <img src="..\Resources\Images\event_place_holder.jpg" alt="Event Image" width="300px" />
-        </div>
-
-        <div class="ml-2">
-            <h2>Fast event 1</h2>
-            <h5>Organiser</h5>
-            <h5>Date</h5>
-            <h5>Places</h5>
-            <h5>Category</h5>
-        </div>
-
-        <div style="position: absolute; right: 10px; top: 40%">
-            <button class="btn btn-outline-success">Go to event</button>
-        </div>
-    </div>
-
-    <div class="border mt-2" style="display: flex; flex-direction: row; position: relative">
-        <div class="p-2">
-            <img src="..\Resources\Images\event_place_holder.jpg" alt="Event Image" width="300px" />
-        </div>
-
-        <div class="ml-2">
-            <h2>Fast event 1</h2>
-            <h5>Organiser</h5>
-            <h5>Date</h5>
-            <h5>Places</h5>
-            <h5>Category</h5>
-        </div>
-
-        <div style="position: absolute; right: 10px; top: 40%">
-            <button class="btn btn-outline-success">Go to event</button>
-        </div>
-    </div>
+                    <div class="ml-5 col">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" class="h2">@ev.name</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="pt-0 h4 text-left" style="font-weight: normal">by @ev.organizer</td>
+                                </tr>
+                                <tr>
+                                    <th class="pt-0 h4 text-left">Start date</th>
+                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.startDate</td>
+                                </tr>
+                                <tr>
+                                    <th class="pt-0 h4 text-left">Places</th>
+                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.nbAvailableTickets</td>
+                                </tr>
+                                <tr>
+                                    <th class="pt-0 h4 text-left">Category</th>
+                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.category</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </button>
+            
+        </form>
+     }
 </div>
