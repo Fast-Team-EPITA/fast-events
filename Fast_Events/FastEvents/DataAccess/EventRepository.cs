@@ -17,12 +17,15 @@ namespace FastEvents.DataAccess
 
         public List<dbo.Event> GetByCategory(Category category)
         {
-            throw new NotImplementedException();
+            var result = _context.Events.Where(x => x.Category.Equals(category));
+            return _mapper.Map < List<dbo.Event>>(result);
+
         }
 
         public List<dbo.Event> GetByOwnerId(string ownerId)
         {
-            throw new NotImplementedException();
+            var result = _context.Events.Where(x => x.OwnerUuid == ownerId);
+            return _mapper.Map<List<dbo.Event>>(result);
         }
     }
 }
