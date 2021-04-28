@@ -100,7 +100,16 @@ namespace FastEvents.Controllers
             return View(model);
         }
 
-        
+
+        public IActionResult Stat(string eventId)
+        {
+            //TODO Get stat by eventId
+            var stat = new Stat() { };
+            var model = new StatByEventModel();
+            return View(stat);
+        }
+
+
         /**
          *  QR Code Management
          */
@@ -127,6 +136,7 @@ namespace FastEvents.Controllers
             byte[] fileBytes = System.IO.File.ReadAllBytes(Path.Join(QrCodesPath, qrCodeFilename));
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, qrCodeFilename);
         }
+
 
         
         /**
