@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using FastEvents.DataAccess.Interfaces;
 using FastEvents.dbo;
 using FastEvents.Models;
 using QRCoder;
@@ -14,19 +16,29 @@ namespace FastEvents.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IEventRepository _eventRepository;
+        private readonly ITicketRepository _ticketRepository;
+        private readonly IStatRepository _statRepository;
+        private readonly QRCodeGenerator _qrCodeGenerator = new();
+
         private string _userId;
+        private List<Event> _events;
+        private List<Ticket> _tickets;
         
-        private static readonly QRCodeGenerator QrCodeGenerator = new();
         private static readonly string QrCodesPath = Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "QRCodes");
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IEventRepository eventRepository,
+            ITicketRepository ticketRepository, IStatRepository statRepository)
         {
             _logger = logger;
+            _eventRepository = eventRepository;
+            _ticketRepository = ticketRepository;
+            _statRepository = statRepository;
         }
-        
-        
+
+
         /**
-         *  Misc
+         *  Data access
          */
         private void GetUserIdFromCookies()
         {
@@ -40,11 +52,7 @@ namespace FastEvents.Controllers
                 _userId = value;
         }
 
-        
-        /**
-         *  View Navigation
-         */
-        public IActionResult Index()
+        private async Task GetEvents()
         {
             var event1 = new Event()
             {
@@ -55,9 +63,10 @@ namespace FastEvents.Controllers
                 endDate = DateTime.Now.AddDays(1),
                 capacity = 100,
                 location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
-                description = "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
+                description =
+                    "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
                 pictureFilename = "event_place_holder.jpg",
-                ownerUuid = "",//_userId,
+                ownerUuid = "", //_userId,
                 category = Category.Concert,
                 nbAvailableTickets = 30
             };
@@ -71,9 +80,10 @@ namespace FastEvents.Controllers
                 endDate = DateTime.Now.AddDays(1),
                 capacity = 50,
                 location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
-                description = "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
+                description =
+                    "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
                 pictureFilename = "event_place_holder.jpg",
-                ownerUuid = "",//_userId,
+                ownerUuid = "", //_userId,
                 category = Category.Conference,
                 nbAvailableTickets = 0
             };
@@ -87,15 +97,37 @@ namespace FastEvents.Controllers
                 endDate = DateTime.Now.AddDays(1),
                 capacity = 100,
                 location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
-                description = "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
+                description =
+                    "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
                 pictureFilename = "event_place_holder.jpg",
-                ownerUuid = "",//_userId,
+                ownerUuid = "", //_userId,
                 category = Category.OpenAir,
                 nbAvailableTickets = 10
             };
-            var events = new List<Event> { event1, event2, event3 };
-            var model = new IndexViewModel(events);
+            //_events= (await _eventRepository.Get()).ToList(); TODO UNCOMMENT
+            _events = new List<Event> {event1, event2, event3};
+        }
+
+        private void GetTickets(string ownerId)
+        {
+            //_tickets = _ticketRepository.GetByOwnerId(ownerId); TODO UNCOMMENT
+            _tickets = new List<Ticket> {new() {eventId = 1L, qrcFilename = "1.jpg", eventName = "Fast Event 1"}};
+        }
+
+        private Event GetEventById(long eventId)
+        {
+            return _events.First(e => e.id == eventId);
+        }
+
+
+        /**
+         *  View Navigation
+         */
+        public async Task<IActionResult> Index()
+        {
             GetUserIdFromCookies();
+            await GetEvents();
+            var model = new IndexViewModel(_events);
             return View(model);
         }
 
@@ -104,34 +136,24 @@ namespace FastEvents.Controllers
             return View();
         }
 
-        public IActionResult Detail(string eventId)
+        public IActionResult Detail(long eventId)
         {
-            //TODO Generate model using eventId
-            var selectedEvent = new Event()
-            {
-                name = "Fast Event 1",
-                organizer = "Fast Team",
-                startDate = DateTime.Now,
-                endDate = DateTime.Now.AddDays(1),
-                capacity = 100,
-                location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
-                description = "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
-                pictureFilename = "event_place_holder.jpg",
-                ownerUuid = "",//_userId,
-                category = Category.Concert,
-                nbAvailableTickets = 30
-                
-            };
+            var stat = new Stat {date = DateTime.Now, eventId = eventId};
+            _statRepository.Insert(stat);
+            var selectedEvent = GetEventById(eventId);
             var model = new DetailViewModel(selectedEvent, selectedEvent.ownerUuid == _userId);
             return View(model);
         }
 
-        public IActionResult CreateOrEdit(string eventId)
+        public IActionResult CreateOrEdit(long? eventId = null)
         {
             CreateOrEditViewModel model;
-            if (eventId != null)
+            if (eventId.HasValue)
+            {
                 //TODO Generate model for edit screen
+                var selectedEvent = GetEventById(eventId.Value);
                 model = new CreateOrEditViewModel(new Event(), false);
+            }
             else
                 //TODO Generate model for create screen
                 model = new CreateOrEditViewModel(new Event(), true);
@@ -140,16 +162,15 @@ namespace FastEvents.Controllers
 
         public IActionResult Tickets(string userId)
         {
-            var tickets = new List<Ticket> {new() {eventId = 1L, qrcFilename = "1.jpg", eventName = "Fast Event 1"}};
-            //TODO Add all tickets for this userId
-            var model = new TicketsViewModel(tickets);
+            GetTickets(userId);
+            var model = new TicketsViewModel(_tickets);
             return View(model);
         }
 
 
-        public IActionResult Stat(string eventId)
+        public IActionResult Stat(long eventId)
         {
-            var stat = new StatByEvent(); //TODO Get Stats
+            var stat = _statRepository.GetByEvent(eventId);
             return Json(stat);
         }
 
@@ -166,9 +187,9 @@ namespace FastEvents.Controllers
         }
 
         private string GenerateQRCode()
-        { 
+        {
             var uuid = Guid.NewGuid().ToString();
-            var qrCodeData = QrCodeGenerator.CreateQrCode(uuid, QRCodeGenerator.ECCLevel.Q);
+            var qrCodeData = _qrCodeGenerator.CreateQrCode(uuid, QRCodeGenerator.ECCLevel.Q);
             var qrCode = new QRCode(qrCodeData).GetGraphic(20);
             var filename = $"{uuid}.jpg";
             qrCode.Save(Path.Join(QrCodesPath, filename));
@@ -182,14 +203,13 @@ namespace FastEvents.Controllers
         }
 
 
-        
         /**
          *  Error
          */
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
     }
 }

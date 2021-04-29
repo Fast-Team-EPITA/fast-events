@@ -8,9 +8,9 @@ namespace FastEvents.Models
 
         public bool Create { get; set; }
 
-        public CreateOrEditViewModel(Event @event, bool create)
+        public CreateOrEditViewModel(Event selectedEvent, bool create)
         {
-            Event = @event;
+            Event = selectedEvent;
             Create = create;
         }
     }

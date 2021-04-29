@@ -10,7 +10,7 @@ using FastEvents.DataAccess.Interfaces;
 
 namespace FastEvents.DataAccess
 {
-    public class TicketRepository : Repository<EfModels.Ticket, dbo.Ticket>, Interfaces.ITicketsRepository
+    public class TicketRepository : Repository<EfModels.Ticket, dbo.Ticket>, Interfaces.ITicketRepository
     {
         public TicketRepository(FastEventContext context, ILogger<EventRepository> logger, IMapper mapper) : base(context, logger, mapper)
         {
@@ -22,7 +22,7 @@ namespace FastEvents.DataAccess
             return result.Count();
         }
 
-        List<dbo.Ticket> ITicketsRepository.GetByOwnerId(string ownerId)
+        List<dbo.Ticket> ITicketRepository.GetByOwnerId(string ownerId)
         {
             var result = _context.Tickets.Where(x => x.OwnerUuid == ownerId);
             return _mapper.Map<List<dbo.Ticket>>(result);
