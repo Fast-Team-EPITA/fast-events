@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FastEvents.dbo
 {
-    public class StatByEventModel : Interfaces.IObjectWithId
+    public class StatByEvent : Interfaces.IObjectWithId
     {
         public long id { get; set; }
         public int views { get; set; }

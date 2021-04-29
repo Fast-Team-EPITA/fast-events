@@ -1,4 +1,6 @@
-﻿namespace FastEvents.Models
+﻿using FastEvents.dbo;
+
+namespace FastEvents.Models
 {
     public class CreateOrEditViewModel
     {

@@ -19,8 +19,8 @@ namespace FastEvents.DataAccess
             CreateMap<dbo.Ticket, EfModels.Ticket>();
             CreateMap<EfModels.Ticket, dbo.Ticket>();
 
-            CreateMap<dbo.StatByEventModel, EfModels.EventView>();
-            CreateMap<EfModels.EventView, dbo.StatByEventModel>();
+            CreateMap<dbo.StatByEvent, EfModels.EventView>();
+            CreateMap<EfModels.EventView, dbo.StatByEvent>();
 
             CreateMap<dbo.TicketView, EfModels.TicketView>();
             CreateMap<EfModels.TicketView, dbo.TicketView>();

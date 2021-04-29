@@ -3,13 +3,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using FastEvents.dbo;
 using FastEvents.Models;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using QRCoder;
 
 namespace FastEvents.Controllers
@@ -152,10 +149,8 @@ namespace FastEvents.Controllers
 
         public IActionResult Stat(string eventId)
         {
-            //TODO Get stat by eventId
-            var stat = new Stat() { };
-            var model = new StatByEventModel();
-            return View(stat);
+            var stat = new StatByEvent(); //TODO Get Stats
+            return Json(stat);
         }
 
 

@@ -15,10 +15,10 @@ namespace FastEvents.DataAccess
         {
         }
 
-        public StatByEventModel GetByEvent(long eventId)
+        public StatByEvent GetByEvent(long eventId)
         {
             var result = _context.Stats.FirstOrDefault(x => x.EventId == eventId);
-            return _mapper.Map<dbo.StatByEventModel>(result);
+            return _mapper.Map<dbo.StatByEvent>(result);
         }
     }
 }
