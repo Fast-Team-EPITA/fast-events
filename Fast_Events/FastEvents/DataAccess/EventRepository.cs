@@ -23,7 +23,7 @@ namespace FastEvents.DataAccess
 
         public List<dbo.Event> GetByCategory(Category category)
         {
-            var result = _context.Events.Where(x => x.Category.Equals(category));
+            var result = _context.Events.Where(x => x.Category == category.ToString());
             return _mapper.Map<List<dbo.Event>>(result);
 
         }
