@@ -65,7 +65,7 @@ namespace FastEvents.Controllers
                 description =
                     "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
                 pictureFilename = "event_place_holder.jpg",
-                ownerUuid = "", //_userId,
+                ownerUuid = _userId,
                 category = Category.Concert,
                 nbAvailableTickets = 30
             };
@@ -111,75 +111,43 @@ namespace FastEvents.Controllers
         /**
          *  View Navigation
          */
+        
         public async Task<IActionResult> Index(Category? sortCategory = null, string sortType = null, bool ownedEvents = false, string searchPattern = null)
         {
             GetUserIdFromCookies();
             var events = await GetEvents();
             if (sortCategory != null)
-                events = sortByCategory(sortCategory, events);
+                events = SortByCategory(sortCategory, events);
 
             if (sortType != null)
-                events = sortByType(sortType, events);
+                events = SortByType(sortType, events);
 
             if (ownedEvents)
-                events = sortOwnedEvents(events);
+                events = SortOwnedEvents(events);
 
             if (searchPattern != null)
-                events = sortSearchPattern(searchPattern, events);
+                events = SortSearchPattern(searchPattern, events);
 
             var model = new IndexViewModel(events);
             return View(model);
         }
 
-        public List<Event> sortByCategory(Category? category, List<Event> events)
-        {
-            return events.Where((ev) => ev.category == category).ToList();
-        }
-
-        public List<Event> sortByType(string type, List<Event> events)
-        {
-            switch (type)
-            {
-                case "Name":
-                    return events.OrderBy(ev => ev.name).ToList();
-                case "Organizer":
-                    return events.OrderBy(ev => ev.organizer).ToList();
-                case "Date":
-                    return events.OrderBy(ev => ev.startDate).ToList();
-                default:
-                    return events;
-            }
-        }
-
-        public List<Event> sortOwnedEvents(List<Event> events)
-        {
-            return events.Where((ev) => ev.ownerUuid == _userId).ToList();
-        }
-
-        public List<Event> sortSearchPattern(string searchPattern, List<Event> events)
-        {
-            return events.Where(ev => ev.name.ToLower().Contains(searchPattern.ToLower()) || ev.organizer.ToLower().Contains(searchPattern.ToLower())).ToList();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        public IActionResult Detail(long eventId)
+        [Route("detail/{eventId:long}")]
+        public async Task<IActionResult> Detail(long eventId)
         {
             var stat = new Stat {date = DateTime.Now, eventId = eventId};
-            _statRepository.Insert(stat);
+            //await _statRepository.Insert(stat);
 
-            var selectedEvent = _eventRepository.GetById(eventId);
+            var selectedEvent = (await GetEvents()).First(x => x.id == eventId);//_eventRepository.GetById(eventId);
             var isOwner = selectedEvent.ownerUuid == _userId;
             var hasTicket =
-                _ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.eventId == eventId) != null;
+                true;//_ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.eventId == eventId) != null;
 
             var model = new DetailViewModel(selectedEvent, isOwner, hasTicket);
             return View(model);
         }
 
+        [Route("edit/{eventId:long?}")]
         public IActionResult CreateOrEdit(long? eventId = null)
         {
             var model = eventId.HasValue
@@ -188,18 +156,29 @@ namespace FastEvents.Controllers
             return View(model);
         }
 
+        [Route("tickets")]
         public IActionResult Tickets()
         {
             var model = new TicketsViewModel(_ticketRepository.GetByOwnerId(_userId));
             return View(model);
         }
 
-
+        [Route("stat/{eventId:long}")]
         public IActionResult Stat(long eventId)
         {
             var stat = _statRepository.GetByEvent(eventId);
             return Json(stat);
         }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+        
+        
+        /**
+         *  Button Actions
+         */
 
         public async Task<IActionResult> CancelEvent(long eventId)
         {
@@ -214,6 +193,36 @@ namespace FastEvents.Controllers
             return await Index();
             // TODO remove one ticket to event in db
         }
+        
+        
+        /**
+         *  Sorting
+         */
+        private static List<Event> SortByCategory(Category? category, List<Event> events)
+        {
+            return events.Where((ev) => ev.category == category).ToList();
+        }
+
+        private static List<Event> SortByType(string type, List<Event> events)
+        {
+            return type switch
+            {
+                "Name" => events.OrderBy(ev => ev.name).ToList(),
+                "Organizer" => events.OrderBy(ev => ev.organizer).ToList(),
+                "Date" => events.OrderBy(ev => ev.startDate).ToList(),
+                _ => events
+            };
+        }
+
+        private List<Event> SortOwnedEvents(List<Event> events)
+        {
+            return events.Where((ev) => ev.ownerUuid == _userId).ToList();
+        }
+
+        private static List<Event> SortSearchPattern(string searchPattern, List<Event> events)
+        {
+            return events.Where(ev => ev.name.ToLower().Contains(searchPattern.ToLower()) || ev.organizer.ToLower().Contains(searchPattern.ToLower())).ToList();
+        }
 
 
         /**
@@ -221,13 +230,13 @@ namespace FastEvents.Controllers
          */
         public IActionResult GenerateAndDownloadQrCode(long eventId)
         {
-            var filename = GenerateQRCode();
+            var filename = GenerateQrCode();
             var ticket = new Ticket { eventId = eventId, ownerUuid = _userId, qrcFilename = filename };
             _ticketRepository.Insert(ticket);
             return DownloadQrCode(filename);
         }
 
-        private string GenerateQRCode()
+        private string GenerateQrCode()
         {
             var uuid = Guid.NewGuid().ToString();
             var qrCodeData = _qrCodeGenerator.CreateQrCode(uuid, QRCodeGenerator.ECCLevel.Q);
