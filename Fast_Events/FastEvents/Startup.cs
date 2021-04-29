@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using FastEvents.DataAccess;
 using FastEvents.DataAccess.Interfaces;
 using QRCoder;
@@ -26,10 +27,13 @@ namespace FastEvents
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddEntityFrameworkSqlServer().AddDbContext<DataAccess.EfModels.FastEventContext>();
+            services.AddAutoMapper(typeof(DataAccess.AutoMapperProfiles));
             services.AddControllersWithViews();
             services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
             services.AddScoped<IStatRepository, StatRepository>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
