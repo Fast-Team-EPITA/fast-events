@@ -107,9 +107,19 @@
     </form>
 
     <form class="text-center mt-4" method="post">
-        <button class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Index">
-            Create the event
-        </button>
+        @if (Model.Create)
+        {
+            <button class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Index">
+                Create the event
+            </button>
+        }
+        else
+        {
+            <button class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Index">
+                Edit the event
+            </button>
+        }
+        
     </form>
 </div>
 

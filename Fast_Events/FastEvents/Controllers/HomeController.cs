@@ -56,10 +56,10 @@ namespace FastEvents.Controllers
             var event1 = new Event
             {
                 id = 1,
-                name = "Fast Event 1",
-                organizer = "Fast Team",
-                startDate = DateTime.Now,
-                endDate = DateTime.Now.AddDays(1),
+                name = "A Fast Event 1",
+                organizer = "B Fast Team",
+                startDate = DateTime.Now.AddDays(1),
+                endDate = DateTime.Now.AddDays(2),
                 capacity = 100,
                 location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
                 description =
@@ -73,8 +73,8 @@ namespace FastEvents.Controllers
             var event2 = new Event
             {
                 id = 2,
-                name = "Fast Event 2",
-                organizer = "Fast Team",
+                name = "C Fast Event 2",
+                organizer = "A Fast Team",
                 startDate = DateTime.Now,
                 endDate = DateTime.Now.AddDays(1),
                 capacity = 50,
@@ -90,10 +90,10 @@ namespace FastEvents.Controllers
             var event3 = new Event
             {
                 id = 3,
-                name = "Fast Event 3",
-                organizer = "Fast Team",
-                startDate = DateTime.Now,
-                endDate = DateTime.Now.AddDays(1),
+                name = "B dast Event 3",
+                organizer = "C dast Team",
+                startDate = DateTime.Now.AddDays(3),
+                endDate = DateTime.Now.AddDays(4),
                 capacity = 100,
                 location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
                 description =
@@ -111,12 +111,54 @@ namespace FastEvents.Controllers
         /**
          *  View Navigation
          */
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Category? sortCategory = null, string sortType = null, bool ownedEvents = false, string searchPattern = null)
         {
             GetUserIdFromCookies();
             var events = await GetEvents();
+            if (sortCategory != null)
+                events = sortByCategory(sortCategory, events);
+
+            if (sortType != null)
+                events = sortByType(sortType, events);
+
+            if (ownedEvents)
+                events = sortOwnedEvents(events);
+
+            if (searchPattern != null)
+                events = sortSearchPattern(searchPattern, events);
+
             var model = new IndexViewModel(events);
             return View(model);
+        }
+
+        public List<Event> sortByCategory(Category? category, List<Event> events)
+        {
+            return events.Where((ev) => ev.category == category).ToList();
+        }
+
+        public List<Event> sortByType(string type, List<Event> events)
+        {
+            switch (type)
+            {
+                case "Name":
+                    return events.OrderBy(ev => ev.name).ToList();
+                case "Organizer":
+                    return events.OrderBy(ev => ev.organizer).ToList();
+                case "Date":
+                    return events.OrderBy(ev => ev.startDate).ToList();
+                default:
+                    return events;
+            }
+        }
+
+        public List<Event> sortOwnedEvents(List<Event> events)
+        {
+            return events.Where((ev) => ev.ownerUuid == _userId).ToList();
+        }
+
+        public List<Event> sortSearchPattern(string searchPattern, List<Event> events)
+        {
+            return events.Where(ev => ev.name.ToLower().Contains(searchPattern.ToLower()) || ev.organizer.ToLower().Contains(searchPattern.ToLower())).ToList();
         }
 
         public IActionResult Privacy()

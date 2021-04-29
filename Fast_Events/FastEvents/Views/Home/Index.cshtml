@@ -10,41 +10,43 @@
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Filtre
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <button class="dropdown-item">Techno</button>
-                <button class="dropdown-item">Classic</button>
-                <button class="dropdown-item">Visit</button>
-            </div>
+            <form class="dropdown-menu" aria-labelledby="dropdownMenuButton" method="post">
+                <button class="dropdown-item" asp-action="Index">All</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@IndexViewModel.Category.Concert">Concert</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@IndexViewModel.Category.Conference">Conference</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@IndexViewModel.Category.OpenAir">Open Air</button>
+            </form>
         </div>
 
         <div class="dropdown m-2">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Sort
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Name</a>
-                <a class="dropdown-item" href="#">Organizer</a>
-                <a class="dropdown-item" href="#">Date</a>
-            </div>
+            <form class="dropdown-menu" aria-labelledby="dropdownMenuButton" method="post">
+                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Name">Name</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Organizer">Organizer</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Date">Date</button>
+            </form>
         </div>
 
-        <div class="form-check m-2">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <form class="form-check m-2" method="post">
+            @*// Trouver comment faire un "oncheck" sur la checkbox pour appeler l'action Index*@
+            <input class="form-check-input" type="checkbox" value="" asp-action="Index" id="flexCheckDefault">
             <label class="form-check-label" for="flexCheckDefault">
                 Owned events
             </label>
-        </div>
-
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 
-        <div style="position: absolute; right: 10px">
-            <button class="btn btn-outline-success my-2 my-sm-0" style="margin: 10px">My tickets</button>
+        <form class="form-inline my-2 my-lg-0" method="post" asp-controller="Home" asp-action="Index">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" name="searchPattern" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form> 
 
-            <button class="btn btn-outline-success my-2 my-sm-0" style="margin: 10px">Create an event</button>
-        </div>
+        <form style="position: absolute; right: 10px" method="post">
+            <button class="btn btn-outline-success my-2 my-sm-0" style="margin: 10px" asp-action="Tickets">My tickets</button>
+
+            <button class="btn btn-outline-success my-2 my-sm-0" style="margin: 10px" asp-action="CreateOrEdit">Create an event</button>
+        </form>
     </nav>
 
     @foreach (var ev in Model.Events)
