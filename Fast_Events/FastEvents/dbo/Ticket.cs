@@ -8,12 +8,11 @@ namespace FastEvents.dbo
     public class Ticket : Interfaces.IObjectWithId
     {
         public long id { get; set; }
-        public string name { get; set; }
-        public DateTime start_date { get; set; }
-        public DateTime end_date { get; set; }
-        public long eventId { get; set; }
-        public string ownerUuid { get; set; }
-        public string eventName { get; set; }
-        public string qrcFilename { get; set; }
+        public long EventId { get; set; }
+        public string OwnerUuid { get; set; }
+        public string EventName { get; set; }
+        public string QrcFilename { get; set; }
+
+        public virtual Event Event { get; set; }
     }
 }
