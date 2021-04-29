@@ -141,14 +141,7 @@ namespace FastEvents.Controllers
         [Route("detail/{eventId:long}")]
         public async Task<IActionResult> Detail(long eventId)
         {
-            var stat = new Stat {Date = DateTime.Now, EventId = eventId};
-            await _statRepository.Insert(stat);
-
-            var selectedEvent = _eventUiRepository.GetById(eventId);
-            var isOwner = selectedEvent.OwnerUuid == _userId;
-            var hasTicket = _ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.EventUi.Id == eventId) != null;
-
-            var model = new DetailViewModel(selectedEvent, isOwner, hasTicket);
+            var model = await PrepareDetailModel(eventId);
             return View(model);
         }
 
@@ -212,20 +205,23 @@ namespace FastEvents.Controllers
                     break;
             }
 
-            Event ev = new Event();
-            ev.Name = eventName;
-            ev.Organizer = organiserName;
-            ev.StartDate = startDate;
-            ev.EndDate = endDate;
-            ev.Category = category1;
-            ev.Capacity = numberPlaces;
-            ev.Location = location;
-            ev.Description = description;
-            ev.PictureFilename = image;
-            ev.OwnerUuid = _userId;
+            var ev = new Event
+            {
+                Name = eventName,
+                Organizer = organiserName,
+                StartDate = startDate,
+                EndDate = endDate,
+                Category = category1,
+                Capacity = numberPlaces,
+                Location = location,
+                Description = description,
+                PictureFilename = image,
+            };
 
-            await _eventRepository.Insert(ev);
-            return await Index();
+            var insertedEvent = await _eventRepository.Insert(ev);
+            
+            var model = await PrepareDetailModel(insertedEvent.Id);
+            return View("Detail", model);
         }
 
         public async Task<IActionResult> EditEvent(string eventName, string organiserName, DateTime startDate, DateTime endDate, string category, int numberPlaces, string location, string description, string image, int eventId)
@@ -241,21 +237,41 @@ namespace FastEvents.Controllers
                     break;
             }
 
-            Event ev = new Event();
-
-            ev.Id = eventId;
-            ev.Name = eventName;
-            ev.Organizer = organiserName;
-            ev.StartDate = startDate;
-            ev.EndDate = endDate;
-            ev.Category = category1;
-            ev.Capacity = numberPlaces;
-            ev.Location = location;
-            ev.Description = description;
-            ev.PictureFilename = image;
+            var ev = new Event
+            {
+                Id = eventId,
+                Name = eventName,
+                Organizer = organiserName,
+                StartDate = startDate,
+                EndDate = endDate,
+                Category = category1,
+                Capacity = numberPlaces,
+                Location = location,
+                Description = description,
+                PictureFilename = image,
+            };
 
             await _eventRepository.Update(ev);
-            return await Index();
+            
+            
+            var model = await PrepareDetailModel(eventId);
+            return View("Detail", model);
+        }
+
+        /**
+         *  Prepare models
+         */
+
+        private async Task<DetailViewModel> PrepareDetailModel(long eventId)
+        {
+            var stat = new Stat {Date = DateTime.Now, EventId = eventId};
+            await _statRepository.Insert(stat);
+
+            var selectedEvent = _eventUiRepository.GetById(eventId);
+            var isOwner = selectedEvent.OwnerUuid == _userId;
+            var hasTicket = _ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.EventUi.Id == eventId) != null;
+
+            return new DetailViewModel(selectedEvent, isOwner, hasTicket);
         }
 
 
