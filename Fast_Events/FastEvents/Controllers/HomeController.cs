@@ -33,12 +33,13 @@ namespace FastEvents.Controllers
             Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "QRCodes");
 
         public HomeController(ILogger<HomeController> logger, IEventUiRepository eventUiRepository,
-            ITicketRepository ticketRepository, IStatRepository statRepository)
+            ITicketRepository ticketRepository, IStatRepository statRepository, IEventRepository eventRepository)
         {
             _logger = logger;
             _eventUiRepository = eventUiRepository;
             _ticketRepository = ticketRepository;
             _statRepository = statRepository;
+            _eventRepository = eventRepository;
         }
 
 
@@ -109,7 +110,7 @@ namespace FastEvents.Controllers
                 Category = Category.OpenAir,
                 NbAvailableTickets = 10
             };
-            //return new List<Event> {event1, event2, event3};
+            //return new List<EventUi> {event1, event2, event3};
             return (await _eventUiRepository.Get()).ToList();
         }
 
@@ -197,8 +198,67 @@ namespace FastEvents.Controllers
             return await Index();
             // TODO remove one ticket to event in db
         }
-        
-        
+
+        public async Task<IActionResult> CreateEvent(string eventName, string organiserName, DateTime startDate, DateTime endDate, string category, int numberPlaces, string location, string description, string image)
+        {
+            Category category1 = Category.Concert;
+            switch (category)
+            {
+                case "OpenAir":
+                    category1 = Category.OpenAir;
+                    break;
+                case "Conference":
+                    category1 = Category.Conference;
+                    break;
+            }
+
+            Event ev = new Event();
+            ev.Name = eventName;
+            ev.Organizer = organiserName;
+            ev.StartDate = startDate;
+            ev.EndDate = endDate;
+            ev.Category = category1;
+            ev.Capacity = numberPlaces;
+            ev.Location = location;
+            ev.Description = description;
+            ev.PictureFilename = image;
+            ev.OwnerUuid = _userId;
+
+            await _eventRepository.Insert(ev);
+            return await Index();
+        }
+
+        public async Task<IActionResult> EditEvent(string eventName, string organiserName, DateTime startDate, DateTime endDate, string category, int numberPlaces, string location, string description, string image, int eventId)
+        {
+            Category category1 = Category.Concert;
+            switch (category)
+            {
+                case "OpenAir":
+                    category1 = Category.OpenAir;
+                    break;
+                case "Conference":
+                    category1 = Category.Conference;
+                    break;
+            }
+
+            Event ev = new Event();
+
+            ev.Id = eventId;
+            ev.Name = eventName;
+            ev.Organizer = organiserName;
+            ev.StartDate = startDate;
+            ev.EndDate = endDate;
+            ev.Category = category1;
+            ev.Capacity = numberPlaces;
+            ev.Location = location;
+            ev.Description = description;
+            ev.PictureFilename = image;
+
+            await _eventRepository.Update(ev);
+            return await Index();
+        }
+
+
         /**
          *  Sorting
          */

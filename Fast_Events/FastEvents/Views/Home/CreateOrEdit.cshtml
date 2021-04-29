@@ -12,14 +12,15 @@
     {
         <h1 class="mb-4" style="text-align: center">Edit your event !</h1>
     }
-    <form>
+
+    <form asp-action="" method="post" class="text-center">
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold" for="eventName">Name of the event</label>
             <div class="col-sm-5">
                 @{
                     var prefillName = String.IsNullOrEmpty(Model.EventUi.Name) ? "" : Model.EventUi.Name;
-                } 
-                <input type="text" class="form-control" id="eventName" value="@prefillName" placeholder="Enter the name of your event">
+                }
+                <input type="text" class="form-control" id="eventName" name="eventName" value="@prefillName" placeholder="Enter the name of your event">
             </div>
         </div>
 
@@ -29,7 +30,7 @@
                 @{
                     var prefillOrganizer = String.IsNullOrEmpty(Model.EventUi.Organizer) ? "" : Model.EventUi.Organizer;
                 }
-                <input type="text" class="form-control" id="organiserName" value="@prefillOrganizer" placeholder="Enter the name of the organiser">
+                <input type="text" class="form-control" id="organiserName" name="organiserName" value="@prefillOrganizer" placeholder="Enter the name of the organiser">
             </div>
         </div>
 
@@ -39,7 +40,7 @@
                 @{
                     var prefillStartDate = Model.EventUi.StartDate == default(DateTime) ? default(DateTime) : Model.EventUi.StartDate;
                 }
-                <input type="date" class="form-control" id="startDate" value="@prefillStartDate" placeholder="Enter the starting date of the event">
+                <input type="date" class="form-control" id="startDate" name="startDate" value="@prefillStartDate" placeholder="Enter the starting date of the event">
             </div>
         </div>
 
@@ -49,7 +50,7 @@
                 @{
                     var prefillEndDate = Model.EventUi.EndDate == default(DateTime) ? default(DateTime) : Model.EventUi.EndDate;
                 }
-                <input type="date" class="form-control" id="endingDate" value="@prefillEndDate" placeholder="Enter the ending date of the event">
+                <input type="date" class="form-control" id="endingDate" name="endDate" value="@prefillEndDate" placeholder="Enter the ending date of the event">
             </div>
         </div>
 
@@ -57,11 +58,10 @@
             <label class="col-sm-3 col-form-label font-weight-bold" for="categories">Category</label>
             <div class="col-sm-5">
                 @*// Un peu galere de preset la categorie*@
-                <select class="form-control" id="categories">
-                    <option>Category 1</option>
-                    <option>Category 2</option>
-                    <option>Category 3</option>
-                    <option>Category 4</option>
+                <select class="form-control" id="categories" name="category">
+                    <option>Concert</option>
+                    <option>OpenAir</option>
+                    <option>Conference</option>
                 </select>
             </div>
         </div>
@@ -72,7 +72,7 @@
                 @{
                     var prefillPlaces = Model.EventUi.Capacity == 0 ? 0 : Model.EventUi.Capacity;
                 }
-                <input type="number" class="form-control" id="numberPlaces" value="@prefillPlaces" placeholder="Enter the number of places for the event">
+                <input type="number" class="form-control" id="numberPlaces" name="numberPlaces" value="@prefillPlaces" placeholder="Enter the number of places for the event">
             </div>
         </div>
 
@@ -82,7 +82,7 @@
                 @{
                     var prefillLocation = String.IsNullOrEmpty(Model.EventUi.Location) ? "" : Model.EventUi.Location;
                 }
-                <input type="text" class="form-control" id="location" value="@prefillLocation" placeholder="Enter the location of the event">
+                <input type="text" class="form-control" id="location" name="location" value="@prefillLocation" placeholder="Enter the location of the event">
             </div>
         </div>
 
@@ -92,7 +92,7 @@
                 @{
                     var prefillDescription = String.IsNullOrEmpty(Model.EventUi.Description) ? "" : Model.EventUi.Description;
                 }
-                <textarea maxlength="500" class="form-control" id="description" value="@prefillDescription" aria-describedby="descriptionHelp" rows="6"></textarea>
+                <textarea maxlength="500" class="form-control" id="description" name="description" value="@prefillDescription" aria-describedby="descriptionHelp" rows="6"></textarea>
                 <small id="descriptionHelp" class="form-text text-muted">Maximum of 500 characters</small>
             </div>
         </div>
@@ -104,22 +104,17 @@
                 <input type="file" id="image" name="image">
             </div>
         </div>
-    </form>
 
-    <form class="text-center mt-4" method="post">
         @if (Model.Create)
         {
-            <button class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Index">
-                Create the event
-            </button>
+            <input class="btn btn-primary btn-lg" value="Create the event" formaction="Home/CreateEvent" type="submit" />
         }
         else
         {
-            <button class="btn btn-primary btn-lg" asp-controller="Home" asp-action="Index">
-                Edit the event
-            </button>
+            <input class="btn btn-primary btn-lg" value="Edit the event" formaction="Home/EditEvent" type="submit" />
+            <input value="@Model.EventUi.Id" name="eventId" style="display: none"/>
         }
-        
     </form>
+
 </div>
 
