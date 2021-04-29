@@ -22,10 +22,9 @@ namespace FastEvents.Controllers
         private readonly QRCodeGenerator _qrCodeGenerator = new();
 
         private string _userId;
-        private List<Event> _events;
-        private List<Ticket> _tickets;
-        
-        private static readonly string QrCodesPath = Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "QRCodes");
+
+        private static readonly string QrCodesPath =
+            Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "QRCodes");
 
         public HomeController(ILogger<HomeController> logger, IEventRepository eventRepository,
             ITicketRepository ticketRepository, IStatRepository statRepository)
@@ -52,9 +51,9 @@ namespace FastEvents.Controllers
                 _userId = value;
         }
 
-        private async Task GetEvents()
+        private async Task<List<Event>> GetEvents()
         {
-            var event1 = new Event()
+            var event1 = new Event
             {
                 id = 1,
                 name = "Fast Event 1",
@@ -71,7 +70,7 @@ namespace FastEvents.Controllers
                 nbAvailableTickets = 30
             };
 
-            var event2 = new Event()
+            var event2 = new Event
             {
                 id = 2,
                 name = "Fast Event 2",
@@ -88,7 +87,7 @@ namespace FastEvents.Controllers
                 nbAvailableTickets = 0
             };
 
-            var event3 = new Event()
+            var event3 = new Event
             {
                 id = 3,
                 name = "Fast Event 3",
@@ -104,19 +103,14 @@ namespace FastEvents.Controllers
                 category = Category.OpenAir,
                 nbAvailableTickets = 10
             };
-            //_events= (await _eventRepository.Get()).ToList(); TODO UNCOMMENT
-            _events = new List<Event> {event1, event2, event3};
+            //return (await _eventRepository.Get()).ToList(); TODO UNCOMMENT
+            return new List<Event> {event1, event2, event3};
         }
 
-        private void GetTickets(string ownerId)
+        private List<Ticket> GetTickets(string ownerId)
         {
-            //_tickets = _ticketRepository.GetByOwnerId(ownerId); TODO UNCOMMENT
-            _tickets = new List<Ticket> {new() {eventId = 1L, qrcFilename = "1.jpg", eventName = "Fast Event 1"}};
-        }
-
-        private Event GetEventById(long eventId)
-        {
-            return _events.First(e => e.id == eventId);
+            //return _ticketRepository.GetByOwnerId(ownerId); TODO UNCOMMENT
+            return new List<Ticket> {new() {eventId = 1L, qrcFilename = "1.jpg", eventName = "Fast Event 1"}};
         }
 
 
@@ -126,8 +120,8 @@ namespace FastEvents.Controllers
         public async Task<IActionResult> Index()
         {
             GetUserIdFromCookies();
-            await GetEvents();
-            var model = new IndexViewModel(_events);
+            var events = await GetEvents();
+            var model = new IndexViewModel(events);
             return View(model);
         }
 
@@ -140,30 +134,23 @@ namespace FastEvents.Controllers
         {
             var stat = new Stat {date = DateTime.Now, eventId = eventId};
             _statRepository.Insert(stat);
-            var selectedEvent = GetEventById(eventId);
+            var selectedEvent = _eventRepository.GetById(eventId);
             var model = new DetailViewModel(selectedEvent, selectedEvent.ownerUuid == _userId);
             return View(model);
         }
 
         public IActionResult CreateOrEdit(long? eventId = null)
         {
-            CreateOrEditViewModel model;
-            if (eventId.HasValue)
-            {
-                //TODO Generate model for edit screen
-                var selectedEvent = GetEventById(eventId.Value);
-                model = new CreateOrEditViewModel(new Event(), false);
-            }
-            else
-                //TODO Generate model for create screen
-                model = new CreateOrEditViewModel(new Event(), true);
+            var model = eventId.HasValue
+                ? new CreateOrEditViewModel(_eventRepository.GetById(eventId.Value), false)
+                : new CreateOrEditViewModel(new Event(), true);
             return View(model);
         }
 
         public IActionResult Tickets(string userId)
         {
             GetTickets(userId);
-            var model = new TicketsViewModel(_tickets);
+            var model = new TicketsViewModel(_ticketRepository.GetByOwnerId(userId));
             return View(model);
         }
 

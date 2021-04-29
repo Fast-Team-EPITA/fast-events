@@ -15,10 +15,16 @@ namespace FastEvents.DataAccess
         {
         }
 
+        public dbo.Event GetById(long id)
+        {
+            EfModels.Event result = _context.Events.FirstOrDefault(x => x.Id == id) ?? new EfModels.Event();
+            return _mapper.Map<dbo.Event>(result);
+        }
+
         public List<dbo.Event> GetByCategory(Category category)
         {
             var result = _context.Events.Where(x => x.Category.Equals(category));
-            return _mapper.Map < List<dbo.Event>>(result);
+            return _mapper.Map<List<dbo.Event>>(result);
 
         }
 
