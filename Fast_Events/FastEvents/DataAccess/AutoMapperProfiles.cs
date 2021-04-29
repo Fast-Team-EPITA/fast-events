@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using FastEvents.dbo;
 
 namespace FastEvents.DataAccess
 {
@@ -14,12 +15,18 @@ namespace FastEvents.DataAccess
             CreateMap<EfModels.Stat, dbo.Stat>();
 
             CreateMap<dbo.EventUi, EfModels.EventView>()
-                 .ForMember(d => d.Category, o => o.MapFrom(y => y.Category));
+                 .ForMember(d => d.Category, 
+                     o => o.MapFrom(y => y.Category.ToString()));
             CreateMap<EfModels.EventView, dbo.EventUi>()
-                .ForMember(d => d.Category, o => o.MapFrom(y => y.Category)); ;
+                .ForMember(d => d.Category,
+                    o => o.MapFrom(y => Enum.Parse<Category>(y.Category)));
 
-            CreateMap<dbo.EventUi, EfModels.EventView>();
-            CreateMap<EfModels.EventView, dbo.EventUi>();
+            CreateMap<dbo.EventUi, EfModels.EventView>()
+                .ForMember(d => d.Category, 
+                    o => o.MapFrom(y => y.Category.ToString()));
+            CreateMap<EfModels.EventView, dbo.EventUi>()
+                .ForMember(d => d.Category,
+                    o => o.MapFrom(y => Enum.Parse<Category>(y.Category)));
 
             CreateMap<dbo.Ticket, EfModels.Ticket>();
             CreateMap<EfModels.Ticket, dbo.Ticket>();
