@@ -6,17 +6,23 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FastEvents.DataAccess;
+using FastEvents.DataAccess.EfModels;
 using FastEvents.DataAccess.Interfaces;
 using FastEvents.dbo;
 using FastEvents.Models;
 using QRCoder;
+using Event = FastEvents.dbo.Event;
+using Stat = FastEvents.dbo.Stat;
+using Ticket = FastEvents.dbo.Ticket;
 
 namespace FastEvents.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IEventRepository _eventRepository;
+        private readonly IRepository<DataAccess.EfModels.Event, Event> _eventRepository;
+        private readonly IEventUiRepository _eventUiRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly IStatRepository _statRepository;
         private readonly QRCodeGenerator _qrCodeGenerator = new();
@@ -26,11 +32,11 @@ namespace FastEvents.Controllers
         private static readonly string QrCodesPath =
             Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "QRCodes");
 
-        public HomeController(ILogger<HomeController> logger, IEventRepository eventRepository,
+        public HomeController(ILogger<HomeController> logger, IEventUiRepository eventUiRepository,
             ITicketRepository ticketRepository, IStatRepository statRepository)
         {
             _logger = logger;
-            _eventRepository = eventRepository;
+            _eventUiRepository = eventUiRepository;
             _ticketRepository = ticketRepository;
             _statRepository = statRepository;
         }
@@ -104,7 +110,7 @@ namespace FastEvents.Controllers
                 NbAvailableTickets = 10
             };
             //return new List<Event> {event1, event2, event3};
-            return (await _eventRepository.Get()).ToList();
+            return (await _eventUiRepository.Get()).ToList();
         }
 
 
@@ -137,7 +143,7 @@ namespace FastEvents.Controllers
             var stat = new Stat {Date = DateTime.Now, EventId = eventId};
             await _statRepository.Insert(stat);
 
-            var selectedEvent = _eventRepository.GetById(eventId);
+            var selectedEvent = _eventUiRepository.GetById(eventId);
             var isOwner = selectedEvent.OwnerUuid == _userId;
             var hasTicket = _ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.EventUi.Id == eventId) != null;
 
@@ -149,7 +155,7 @@ namespace FastEvents.Controllers
         public IActionResult CreateOrEdit(long? eventId = null)
         {
             var model = eventId.HasValue
-                ? new CreateOrEditViewModel(_eventRepository.GetById(eventId.Value), false)
+                ? new CreateOrEditViewModel(_eventUiRepository.GetById(eventId.Value), false)
                 : new CreateOrEditViewModel(new EventUi(), true);
             return View(model);
         }
@@ -180,7 +186,7 @@ namespace FastEvents.Controllers
 
         public async Task<IActionResult> CancelEvent(long eventId)
         {
-            await _eventRepository.Delete(eventId);
+            await _eventUiRepository.Delete(eventId);
             return await Index();
             // TODO add one ticket to event in db
         }

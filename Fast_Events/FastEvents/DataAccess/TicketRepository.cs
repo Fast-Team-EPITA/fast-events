@@ -12,7 +12,7 @@ namespace FastEvents.DataAccess
 {
     public class TicketRepository : Repository<EfModels.Ticket, dbo.Ticket>, Interfaces.ITicketRepository
     {
-        public TicketRepository(FastEventContext context, ILogger<EventRepository> logger, IMapper mapper) : base(context, logger, mapper)
+        public TicketRepository(FastEventContext context, ILogger<TicketRepository> logger, IMapper mapper) : base(context, logger, mapper)
         {
         }
 

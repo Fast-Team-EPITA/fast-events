@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using FastEvents.dbo;
 
 namespace FastEvents.DataAccess.Interfaces
 {
-    public interface IEventRepository : DataAccess.IRepository<EfModels.EventView, dbo.EventUi>
+    public interface IEventRepository : IRepository<DataAccess.EfModels.Event, Event>
     {
-        public dbo.EventUi GetById(long id);
-        List<dbo.EventUi> GetByOwnerId(string ownerId);
-        List<dbo.EventUi> GetByCategory(dbo.Category category);
     }
 }

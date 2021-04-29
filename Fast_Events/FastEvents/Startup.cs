@@ -30,7 +30,7 @@ namespace FastEvents
             services.AddEntityFrameworkSqlServer().AddDbContext<DataAccess.EfModels.FastEventContext>();
             services.AddAutoMapper(typeof(DataAccess.AutoMapperProfiles));
             services.AddControllersWithViews();
-            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IEventUiRepository, EventUiRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
             services.AddScoped<IStatRepository, StatRepository>();
             

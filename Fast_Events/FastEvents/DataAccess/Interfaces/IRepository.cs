@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 namespace FastEvents.DataAccess
 {
     public interface IRepository<DBEntity, ModelEntity>
-
     {
         Task<IEnumerable<ModelEntity>> Get(string includeTables = "");
         Task<ModelEntity> Insert(ModelEntity entity);
