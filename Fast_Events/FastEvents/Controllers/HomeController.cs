@@ -107,12 +107,6 @@ namespace FastEvents.Controllers
             return new List<Event> {event1, event2, event3};
         }
 
-        private List<Ticket> GetTickets(string ownerId)
-        {
-            //return _ticketRepository.GetByOwnerId(ownerId); TODO UNCOMMENT
-            return new List<Ticket> {new() {eventId = 1L, qrcFilename = "1.jpg", eventName = "Fast Event 1"}};
-        }
-
 
         /**
          *  View Navigation
@@ -134,8 +128,13 @@ namespace FastEvents.Controllers
         {
             var stat = new Stat {date = DateTime.Now, eventId = eventId};
             _statRepository.Insert(stat);
+
             var selectedEvent = _eventRepository.GetById(eventId);
-            var model = new DetailViewModel(selectedEvent, selectedEvent.ownerUuid == _userId);
+            var isOwner = selectedEvent.ownerUuid == _userId;
+            var hasTicket =
+                _ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.eventId == eventId) != null;
+
+            var model = new DetailViewModel(selectedEvent, isOwner, hasTicket);
             return View(model);
         }
 
@@ -147,10 +146,9 @@ namespace FastEvents.Controllers
             return View(model);
         }
 
-        public IActionResult Tickets(string userId)
+        public IActionResult Tickets()
         {
-            GetTickets(userId);
-            var model = new TicketsViewModel(_ticketRepository.GetByOwnerId(userId));
+            var model = new TicketsViewModel(_ticketRepository.GetByOwnerId(_userId));
             return View(model);
         }
 
@@ -161,15 +159,29 @@ namespace FastEvents.Controllers
             return Json(stat);
         }
 
+        public async Task<IActionResult> CancelEvent(long eventId)
+        {
+            await _eventRepository.Delete(eventId);
+            return await Index();
+            // TODO add one ticket to event in db
+        }
+
+        public async Task<IActionResult> CancelReservation(long eventId)
+        {
+            //await _ticketRepository.Delete(_ticketRepository.GetByOwnerId());
+            return await Index();
+            // TODO remove one ticket to event in db
+        }
+
 
         /**
          *  QR Code Management
          */
-        public IActionResult GenerateAndDownloadQrCode()
+        public IActionResult GenerateAndDownloadQrCode(long eventId)
         {
-            //TODO check if already downloaded one
             var filename = GenerateQRCode();
-            //TODO add to DB
+            var ticket = new Ticket { eventId = eventId, ownerUuid = _userId, qrcFilename = filename };
+            _ticketRepository.Insert(ticket);
             return DownloadQrCode(filename);
         }
 

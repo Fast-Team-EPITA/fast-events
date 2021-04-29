@@ -6,10 +6,11 @@ namespace FastEvents.Models
     {
         public string ImagePath { get; set; }
         public bool IsOwner { get; set; }
+        public bool HasTicket { get; set; }
         public string GoogleMapLink { get; set; }
         public Event Event { get; set; }
 
-        public DetailViewModel(Event @event, bool isOwner)
+        public DetailViewModel(Event @event, bool isOwner, bool hasTicket)
         {
             Event = @event;
             IsOwner = isOwner;

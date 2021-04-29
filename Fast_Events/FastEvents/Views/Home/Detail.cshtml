@@ -108,7 +108,7 @@
     }
     
     <form class="text-center mt-2" method="post">
-        <button class="btn btn-primary btn-lg" asp-controller="Home" asp-action="GenerateAndDownloadQrCode">
+        <button @Html.Raw(Model.HasTicket ? "disabled" : "") class="btn btn-primary btn-lg" asp-controller="Home" asp-action="GenerateAndDownloadQrCode">
             Order and Download my ticket
         </button>
     </form>
