@@ -13,8 +13,10 @@ namespace FastEvents.DataAccess
             CreateMap<dbo.Stat, EfModels.Stat>();
             CreateMap<EfModels.Stat, dbo.Stat>();
 
-            CreateMap<dbo.EventUi, EfModels.EventView>();
-            CreateMap<EfModels.EventView, dbo.EventUi>();
+            CreateMap<dbo.EventUi, EfModels.EventView>()
+                 .ForMember(d => d.Category, o => o.MapFrom(y => y.Category));
+            CreateMap<EfModels.EventView, dbo.EventUi>()
+                .ForMember(d => d.Category, o => o.MapFrom(y => y.Category)); ;
 
             CreateMap<dbo.EventUi, EfModels.EventView>();
             CreateMap<EfModels.EventView, dbo.EventUi>();
@@ -25,6 +27,8 @@ namespace FastEvents.DataAccess
             CreateMap<dbo.StatByEvent, EfModels.StatByEvent>();
             CreateMap<EfModels.StatByEvent, dbo.StatByEvent>();
 
+            
+                
         }
     }
 }
