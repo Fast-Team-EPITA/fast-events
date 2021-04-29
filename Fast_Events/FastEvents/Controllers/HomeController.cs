@@ -103,15 +103,14 @@ namespace FastEvents.Controllers
                 category = Category.OpenAir,
                 nbAvailableTickets = 10
             };
-            //return (await _eventRepository.Get()).ToList(); TODO UNCOMMENT
-            return new List<Event> {event1, event2, event3};
+            //return new List<Event> {event1, event2, event3};
+            return (await _eventRepository.Get()).ToList();
         }
 
 
         /**
          *  View Navigation
          */
-        
         public async Task<IActionResult> Index(Category? sortCategory = null, string sortType = null, bool ownedEvents = false, string searchPattern = null)
         {
             GetUserIdFromCookies();
@@ -136,12 +135,11 @@ namespace FastEvents.Controllers
         public async Task<IActionResult> Detail(long eventId)
         {
             var stat = new Stat {date = DateTime.Now, eventId = eventId};
-            //await _statRepository.Insert(stat);
+            await _statRepository.Insert(stat);
 
-            var selectedEvent = (await GetEvents()).First(x => x.id == eventId);//_eventRepository.GetById(eventId);
+            var selectedEvent = _eventRepository.GetById(eventId);
             var isOwner = selectedEvent.ownerUuid == _userId;
-            var hasTicket =
-                true;//_ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.eventId == eventId) != null;
+            var hasTicket = _ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.Event.id == eventId) != null;
 
             var model = new DetailViewModel(selectedEvent, isOwner, hasTicket);
             return View(model);
@@ -231,7 +229,7 @@ namespace FastEvents.Controllers
         public IActionResult GenerateAndDownloadQrCode(long eventId)
         {
             var filename = GenerateQrCode();
-            var ticket = new Ticket { eventId = eventId, ownerUuid = _userId, qrcFilename = filename };
+            var ticket = new Ticket { EventId = eventId, OwnerUuid = _userId, QrcFilename = filename };
             _ticketRepository.Insert(ticket);
             return DownloadQrCode(filename);
         }
