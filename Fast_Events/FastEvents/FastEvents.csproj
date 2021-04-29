@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataAccess\EfModels\" />
     <Folder Include="wwwroot\Resources\QRCodes" />
   </ItemGroup>
 

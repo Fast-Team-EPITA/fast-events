@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FastEvents.DataAccess.EfModels;
 using Microsoft.Extensions.Logging;
 using AutoMapper;
+using FastEvents.dbo;
 
 namespace FastEvents.DataAccess
 {
@@ -15,7 +16,7 @@ namespace FastEvents.DataAccess
         {
         }
 
-        public StatByEvent GetByEvent(long eventId)
+        public dbo.StatByEvent GetByEvent(long eventId)
         {
             var result = _context.Stats.FirstOrDefault(x => x.EventId == eventId);
             return _mapper.Map<dbo.StatByEvent>(result);
