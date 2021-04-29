@@ -21,7 +21,7 @@ namespace FastEvents.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IRepository<DataAccess.EfModels.Event, Event> _eventRepository;
+        private readonly IEventRepository _eventRepository;
         private readonly IEventUiRepository _eventUiRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly IStatRepository _statRepository;

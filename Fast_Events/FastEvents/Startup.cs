@@ -30,10 +30,10 @@ namespace FastEvents
             services.AddEntityFrameworkSqlServer().AddDbContext<DataAccess.EfModels.FastEventContext>();
             services.AddAutoMapper(typeof(DataAccess.AutoMapperProfiles));
             services.AddControllersWithViews();
+            services.AddScoped<IEventRepository, EventRepository>();
             services.AddScoped<IEventUiRepository, EventUiRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
             services.AddScoped<IStatRepository, StatRepository>();
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
