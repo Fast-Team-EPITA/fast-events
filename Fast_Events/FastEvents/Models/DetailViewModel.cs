@@ -8,14 +8,14 @@ namespace FastEvents.Models
         public bool IsOwner { get; set; }
         public bool HasTicket { get; set; }
         public string GoogleMapLink { get; set; }
-        public Event Event { get; set; }
+        public EventUi EventUi { get; set; }
 
-        public DetailViewModel(Event @event, bool isOwner, bool hasTicket)
+        public DetailViewModel(EventUi eventUi, bool isOwner, bool hasTicket)
         {
-            Event = @event;
+            EventUi = eventUi;
             IsOwner = isOwner;
-            ImagePath = @"..\Resources\Images\" + Event.pictureFilename;
-            GoogleMapLink = "https://www.google.com/maps/search/?api=1&query=" + Event.location.Replace(" ", "+");
+            ImagePath = @"..\Resources\Images\" + EventUi.PictureFilename;
+            GoogleMapLink = "https://www.google.com/maps/search/?api=1&query=" + EventUi.Location.Replace(" ", "+");
         }
     }
 }

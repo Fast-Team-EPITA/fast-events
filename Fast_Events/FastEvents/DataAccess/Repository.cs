@@ -69,7 +69,7 @@ namespace FastEvents.DataAccess
 
         public virtual async Task<ModelEntity> Update(ModelEntity entity)
         {
-            DBEntity dbEntity = _set.Find(entity.id);
+            DBEntity dbEntity = _set.Find(entity.Id);
 
 
             if (dbEntity == null)
@@ -88,7 +88,6 @@ namespace FastEvents.DataAccess
             catch (Exception ex)
             {
                 _logger.LogError("error on db", ex);
-
                 return null;
             }
             return _mapper.Map<ModelEntity>(dbEntity);

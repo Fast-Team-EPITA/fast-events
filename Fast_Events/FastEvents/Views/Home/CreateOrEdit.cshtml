@@ -17,7 +17,7 @@
             <label class="col-sm-3 col-form-label font-weight-bold" for="eventName">Name of the event</label>
             <div class="col-sm-5">
                 @{
-                    var prefillName = String.IsNullOrEmpty(Model.Event.name) ? "" : Model.Event.name;
+                    var prefillName = String.IsNullOrEmpty(Model.EventUi.Name) ? "" : Model.EventUi.Name;
                 } 
                 <input type="text" class="form-control" id="eventName" value="@prefillName" placeholder="Enter the name of your event">
             </div>
@@ -27,7 +27,7 @@
             <label class="col-sm-3 col-form-label font-weight-bold" for="organiserName">Name of the organiser</label>
             <div class="col-sm-5">
                 @{
-                    var prefillOrganizer = String.IsNullOrEmpty(Model.Event.organizer) ? "" : Model.Event.organizer;
+                    var prefillOrganizer = String.IsNullOrEmpty(Model.EventUi.Organizer) ? "" : Model.EventUi.Organizer;
                 }
                 <input type="text" class="form-control" id="organiserName" value="@prefillOrganizer" placeholder="Enter the name of the organiser">
             </div>
@@ -37,7 +37,7 @@
             <label class="col-sm-3 col-form-label font-weight-bold" for="startDate">Start date of the event</label>
             <div class="col-sm-5">
                 @{
-                    var prefillStartDate = Model.Event.startDate == default(DateTime) ? default(DateTime) : Model.Event.startDate;
+                    var prefillStartDate = Model.EventUi.StartDate == default(DateTime) ? default(DateTime) : Model.EventUi.StartDate;
                 }
                 <input type="date" class="form-control" id="startDate" value="@prefillStartDate" placeholder="Enter the starting date of the event">
             </div>
@@ -47,7 +47,7 @@
             <label class="col-sm-3 col-form-label font-weight-bold" for="endingDate">End date of the event</label>
             <div class="col-sm-5">
                 @{
-                    var prefillEndDate = Model.Event.endDate == default(DateTime) ? default(DateTime) : Model.Event.endDate;
+                    var prefillEndDate = Model.EventUi.EndDate == default(DateTime) ? default(DateTime) : Model.EventUi.EndDate;
                 }
                 <input type="date" class="form-control" id="endingDate" value="@prefillEndDate" placeholder="Enter the ending date of the event">
             </div>
@@ -70,7 +70,7 @@
             <label class="col-sm-3 col-form-label font-weight-bold" for="numberPlaces">Number of places</label>
             <div class="col-sm-5">
                 @{
-                    var prefillPlaces = Model.Event.capacity == 0 ? 0 : Model.Event.capacity;
+                    var prefillPlaces = Model.EventUi.Capacity == 0 ? 0 : Model.EventUi.Capacity;
                 }
                 <input type="number" class="form-control" id="numberPlaces" value="@prefillPlaces" placeholder="Enter the number of places for the event">
             </div>
@@ -80,7 +80,7 @@
             <label class="col-sm-3 col-form-label font-weight-bold" for="location">Location of the event</label>
             <div class="col-sm-5">
                 @{
-                    var prefillLocation = String.IsNullOrEmpty(Model.Event.location) ? "" : Model.Event.location;
+                    var prefillLocation = String.IsNullOrEmpty(Model.EventUi.Location) ? "" : Model.EventUi.Location;
                 }
                 <input type="text" class="form-control" id="location" value="@prefillLocation" placeholder="Enter the location of the event">
             </div>
@@ -90,7 +90,7 @@
             <label class="col-sm-3 col-form-label font-weight-bold" for="description">Description of the event</label>
             <div class="col-sm-5">
                 @{
-                    var prefillDescription = String.IsNullOrEmpty(Model.Event.description) ? "" : Model.Event.description;
+                    var prefillDescription = String.IsNullOrEmpty(Model.EventUi.Description) ? "" : Model.EventUi.Description;
                 }
                 <textarea maxlength="500" class="form-control" id="description" value="@prefillDescription" aria-describedby="descriptionHelp" rows="6"></textarea>
                 <small id="descriptionHelp" class="form-text text-muted">Maximum of 500 characters</small>

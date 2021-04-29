@@ -8,6 +8,6 @@ namespace FastEvents.dbo.Interfaces
 {
     public interface IObjectWithId
     {
-        long id { get; set; }
+        long Id { get; set; }
     }
 }

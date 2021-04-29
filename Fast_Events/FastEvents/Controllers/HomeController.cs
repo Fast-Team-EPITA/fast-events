@@ -51,57 +51,57 @@ namespace FastEvents.Controllers
                 _userId = value;
         }
 
-        private async Task<List<Event>> GetEvents()
+        private async Task<List<EventUi>> GetEvents()
         {
-            var event1 = new Event
+            var event1 = new EventUi
             {
-                id = 1,
-                name = "A Fast Event 1",
-                organizer = "B Fast Team",
-                startDate = DateTime.Now.AddDays(1),
-                endDate = DateTime.Now.AddDays(2),
-                capacity = 100,
-                location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
-                description =
+                Id = 1,
+                Name = "A Fast Event 1",
+                Organizer = "B Fast Team",
+                StartDate = DateTime.Now.AddDays(1),
+                EndDate = DateTime.Now.AddDays(2),
+                Capacity = 100,
+                Location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
+                Description =
                     "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
-                pictureFilename = "event_place_holder.jpg",
-                ownerUuid = _userId,
-                category = Category.Concert,
-                nbAvailableTickets = 30
+                PictureFilename = "event_place_holder.jpg",
+                OwnerUuid = _userId,
+                Category = Category.Concert,
+                NbAvailableTickets = 30
             };
 
-            var event2 = new Event
+            var event2 = new EventUi
             {
-                id = 2,
-                name = "C Fast Event 2",
-                organizer = "A Fast Team",
-                startDate = DateTime.Now,
-                endDate = DateTime.Now.AddDays(1),
-                capacity = 50,
-                location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
-                description =
+                Id = 2,
+                Name = "C Fast Event 2",
+                Organizer = "A Fast Team",
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(1),
+                Capacity = 50,
+                Location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
+                Description =
                     "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
-                pictureFilename = "event_place_holder.jpg",
-                ownerUuid = "", //_userId,
-                category = Category.Conference,
-                nbAvailableTickets = 0
+                PictureFilename = "event_place_holder.jpg",
+                OwnerUuid = "", //_userId,
+                Category = Category.Conference,
+                NbAvailableTickets = 0
             };
 
-            var event3 = new Event
+            var event3 = new EventUi
             {
-                id = 3,
-                name = "B dast Event 3",
-                organizer = "C dast Team",
-                startDate = DateTime.Now.AddDays(3),
-                endDate = DateTime.Now.AddDays(4),
-                capacity = 100,
-                location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
-                description =
+                Id = 3,
+                Name = "B dast Event 3",
+                Organizer = "C dast Team",
+                StartDate = DateTime.Now.AddDays(3),
+                EndDate = DateTime.Now.AddDays(4),
+                Capacity = 100,
+                Location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
+                Description =
                     "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
-                pictureFilename = "event_place_holder.jpg",
-                ownerUuid = "", //_userId,
-                category = Category.OpenAir,
-                nbAvailableTickets = 10
+                PictureFilename = "event_place_holder.jpg",
+                OwnerUuid = "", //_userId,
+                Category = Category.OpenAir,
+                NbAvailableTickets = 10
             };
             //return new List<Event> {event1, event2, event3};
             return (await _eventRepository.Get()).ToList();
@@ -134,12 +134,12 @@ namespace FastEvents.Controllers
         [Route("detail/{eventId:long}")]
         public async Task<IActionResult> Detail(long eventId)
         {
-            var stat = new Stat {date = DateTime.Now, eventId = eventId};
+            var stat = new Stat {Date = DateTime.Now, EventId = eventId};
             await _statRepository.Insert(stat);
 
             var selectedEvent = _eventRepository.GetById(eventId);
-            var isOwner = selectedEvent.ownerUuid == _userId;
-            var hasTicket = _ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.Event.id == eventId) != null;
+            var isOwner = selectedEvent.OwnerUuid == _userId;
+            var hasTicket = _ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.EventUi.Id == eventId) != null;
 
             var model = new DetailViewModel(selectedEvent, isOwner, hasTicket);
             return View(model);
@@ -150,7 +150,7 @@ namespace FastEvents.Controllers
         {
             var model = eventId.HasValue
                 ? new CreateOrEditViewModel(_eventRepository.GetById(eventId.Value), false)
-                : new CreateOrEditViewModel(new Event(), true);
+                : new CreateOrEditViewModel(new EventUi(), true);
             return View(model);
         }
 
@@ -196,30 +196,30 @@ namespace FastEvents.Controllers
         /**
          *  Sorting
          */
-        private static List<Event> SortByCategory(Category? category, List<Event> events)
+        private static List<EventUi> SortByCategory(Category? category, List<EventUi> events)
         {
-            return events.Where((ev) => ev.category == category).ToList();
+            return events.Where((ev) => ev.Category == category).ToList();
         }
 
-        private static List<Event> SortByType(string type, List<Event> events)
+        private static List<EventUi> SortByType(string type, List<EventUi> events)
         {
             return type switch
             {
-                "Name" => events.OrderBy(ev => ev.name).ToList(),
-                "Organizer" => events.OrderBy(ev => ev.organizer).ToList(),
-                "Date" => events.OrderBy(ev => ev.startDate).ToList(),
+                "Name" => events.OrderBy(ev => ev.Name).ToList(),
+                "Organizer" => events.OrderBy(ev => ev.Organizer).ToList(),
+                "Date" => events.OrderBy(ev => ev.StartDate).ToList(),
                 _ => events
             };
         }
 
-        private List<Event> SortOwnedEvents(List<Event> events)
+        private List<EventUi> SortOwnedEvents(List<EventUi> events)
         {
-            return events.Where((ev) => ev.ownerUuid == _userId).ToList();
+            return events.Where((ev) => ev.OwnerUuid == _userId).ToList();
         }
 
-        private static List<Event> SortSearchPattern(string searchPattern, List<Event> events)
+        private static List<EventUi> SortSearchPattern(string searchPattern, List<EventUi> events)
         {
-            return events.Where(ev => ev.name.ToLower().Contains(searchPattern.ToLower()) || ev.organizer.ToLower().Contains(searchPattern.ToLower())).ToList();
+            return events.Where(ev => ev.Name.ToLower().Contains(searchPattern.ToLower()) || ev.Organizer.ToLower().Contains(searchPattern.ToLower())).ToList();
         }
 
 

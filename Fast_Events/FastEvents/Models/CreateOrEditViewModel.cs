@@ -4,13 +4,13 @@ namespace FastEvents.Models
 {
     public class CreateOrEditViewModel
     {
-        public Event Event { get; set; }
+        public EventUi EventUi { get; set; }
 
         public bool Create { get; set; }
 
-        public CreateOrEditViewModel(Event selectedEvent, bool create)
+        public CreateOrEditViewModel(EventUi eventUi, bool create)
         {
-            Event = selectedEvent;
+            EventUi = eventUi;
             Create = create;
         }
     }

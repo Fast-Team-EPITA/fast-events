@@ -7,7 +7,7 @@ namespace FastEvents.dbo
 {
     public class StatByEvent : Interfaces.IObjectWithId
     {
-        public long id { get; set; }
-        public int views { get; set; }
+        public long Id { get; set; }
+        public int Views { get; set; }
     }
 }

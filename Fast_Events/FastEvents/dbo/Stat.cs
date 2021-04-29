@@ -7,8 +7,8 @@ namespace FastEvents.dbo
 {
     public class Stat : Interfaces.IObjectWithId
     {
-        public long id { get; set; }
-        public long eventId { get; set; }
-        public DateTime date { get; set; }
+        public long Id { get; set; }
+        public long EventId { get; set; }
+        public DateTime Date { get; set; }
     }
 }

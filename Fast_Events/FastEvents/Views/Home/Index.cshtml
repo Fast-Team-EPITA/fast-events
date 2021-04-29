@@ -49,21 +49,21 @@
         </form>
     </nav>
 
-    @foreach (var ev in Model.Events)
+    @foreach (var ev in Model.EventUis)
     {
         <form method="post" class="m-4 d-flex text-center">
-            <button class="btn btn-light flex-grow-1" asp-action="Detail" asp-route-eventId="@ev.id">
+            <button class="btn btn-light flex-grow-1" asp-action="Detail" asp-route-eventId="@ev.Id">
                 <div class="mt-2" style="display: flex; flex-direction: row; position: relative">
                     <div class="p-2" style="position: relative">
-                        @if (ev.nbAvailableTickets == 0)
+                        @if (ev.NbAvailableTickets == 0)
                         {
-                            var urlPath = @"..\Resources\Images\" + ev.pictureFilename;
+                            var urlPath = @"..\Resources\Images\" + ev.PictureFilename;
                             <img src=@urlPath style="filter: grayscale()" alt="Event Image" width="400px" />
                             <span style="color: red; font-size: 4rem; font-weight: bold; position: absolute; left: 32%; top: 25%">FULL</span>
                         }
                         else
                         {
-                            var urlPath = @"..\Resources\Images\" + ev.pictureFilename;
+                            var urlPath = @"..\Resources\Images\" + ev.PictureFilename;
                             <img src=@urlPath alt="Event Image" width="400px" />
                         }
                     </div>
@@ -72,22 +72,22 @@
                         <table class="table table-borderless">
                             <tbody>
                                 <tr>
-                                    <td colspan="2" class="h2">@ev.name</td>
+                                    <td colspan="2" class="h2">@ev.Name</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="pt-0 h4 text-left" style="font-weight: normal">by @ev.organizer</td>
+                                    <td colspan="2" class="pt-0 h4 text-left" style="font-weight: normal">by @ev.Organizer</td>
                                 </tr>
                                 <tr>
                                     <th class="pt-0 h4 text-left">Start date</th>
-                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.startDate</td>
+                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.StartDate</td>
                                 </tr>
                                 <tr>
                                     <th class="pt-0 h4 text-left">Places</th>
-                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.nbAvailableTickets</td>
+                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.NbAvailableTickets</td>
                                 </tr>
                                 <tr>
                                     <th class="pt-0 h4 text-left">Category</th>
-                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.category</td>
+                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.Category</td>
                                 </tr>
                             </tbody>
                         </table>

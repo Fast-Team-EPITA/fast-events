@@ -15,11 +15,11 @@ namespace FastEvents.Models
             OpenAir
         }
 
-        public List<Event> Events { get; set; }
+        public List<EventUi> EventUis { get; set; }
 
-        public IndexViewModel(List<Event> events)
+        public IndexViewModel(List<EventUi> eventUis)
         {
-            Events = events;
+            EventUis = eventUis;
         }
 
     }

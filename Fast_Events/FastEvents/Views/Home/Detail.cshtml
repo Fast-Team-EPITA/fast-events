@@ -2,7 +2,7 @@
 @model DetailViewModel
 
 @{
-    var places = Model.Event.capacity - Model.Event.nbAvailableTickets + "/" + Model.Event.capacity;
+    var places = Model.EventUi.Capacity - Model.EventUi.NbAvailableTickets + "/" + Model.EventUi.Capacity;
 }
 
 <div>
@@ -16,14 +16,14 @@
             <table class="table table-borderless">
                 <tbody>
                     <tr>
-                        <td colspan="2" class="h2">@Html.DisplayFor(model => model.Event.name)</td>
+                        <td colspan="2" class="h2">@Html.DisplayFor(model => model.EventUi.Name)</td>
                     </tr>
                     <tr>
-                        <td colspan="2">by @Html.DisplayFor(model => model.Event.organizer)</td>
+                        <td colspan="2">by @Html.DisplayFor(model => model.EventUi.Organizer)</td>
                     </tr>
                     <tr>
                         <th>Category</th>
-                        <td>@Html.DisplayFor(model => model.Event.category)</td>
+                        <td>@Html.DisplayFor(model => model.EventUi.Category)</td>
                     </tr>
                     <tr>
                         <th>Places</th>
@@ -35,23 +35,23 @@
                         <th>Location</th>
                         <td>
                             <a href="@Model.GoogleMapLink" target="_blank">
-                                @Html.DisplayFor(model => model.Event.location)
+                                @Html.DisplayFor(model => model.EventUi.Location)
                             </a>
                         </td>
                     </tr>
                     <tr>
                         <th>Start Date</th>
-                        <td>@Html.DisplayFor(model => model.Event.startDate)</td>
+                        <td>@Html.DisplayFor(model => model.EventUi.StartDate)</td>
                     </tr>
                     <tr>
                         <th>End Date</th>
-                        <td>@Html.DisplayFor(model => model.Event.endDate)</td>
+                        <td>@Html.DisplayFor(model => model.EventUi.EndDate)</td>
                     </tr>
                     @if (Model.IsOwner)
                     {
                         <tr>
                             <th>Event Id</th>
-                            <td>@Html.DisplayFor(model => model.Event.id)</td>
+                            <td>@Html.DisplayFor(model => model.EventUi.Id)</td>
                         </tr>
                     }
                 </tbody>
@@ -65,7 +65,7 @@
                 Description
             </h5>
             <p class="card-text">
-                @Html.DisplayFor(model => model.Event.description)
+                @Html.DisplayFor(model => model.EventUi.Description)
             </p>
         </div>
     </div>
@@ -73,7 +73,7 @@
     @if (Model.IsOwner)
     {
         <form method="post" class="text-right">
-            <button class="btn btn-light btn-md m-2" asp-action="CreateOrEdit" asp-route-eventId="@Model.Event.id">
+            <button class="btn btn-light btn-md m-2" asp-action="CreateOrEdit" asp-route-eventId="@Model.EventUi.Id">
                 Edit Event
             </button>
             <button type="button" class="btn btn-danger btn-md m-2" data-toggle="modal" data-target="#cancelEventModal">

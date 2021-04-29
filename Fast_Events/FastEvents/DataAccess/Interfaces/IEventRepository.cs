@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace FastEvents.DataAccess.Interfaces
 {
-    public interface IEventRepository : DataAccess.IRepository<EfModels.Event, dbo.Event>
+    public interface IEventRepository : DataAccess.IRepository<EfModels.EventView, dbo.EventUi>
     {
-        public dbo.Event GetById(long id);
-        List<dbo.Event> GetByOwnerId(string ownerId);
-        List<dbo.Event> GetByCategory(dbo.Category category);
+        public dbo.EventUi GetById(long id);
+        List<dbo.EventUi> GetByOwnerId(string ownerId);
+        List<dbo.EventUi> GetByCategory(dbo.Category category);
     }
 }
