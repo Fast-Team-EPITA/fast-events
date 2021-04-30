@@ -38,9 +38,9 @@
             <label class="col-sm-3 col-form-label font-weight-bold" for="startDate">Start date of the event</label>
             <div class="col-sm-5">
                 @{
-                    var prefillStartDate = Model.EventUi.StartDate == default(DateTime) ? default(DateTime) : Model.EventUi.StartDate;
+                    var prefillStartDate = Model.EventUi.StartDate == default(DateTime) ? DateTime.Now : Model.EventUi.StartDate;
                 }
-                <input type="date" class="form-control" id="startDate" name="startDate" value="@prefillStartDate" placeholder="Enter the starting date of the event">
+                <input type="datetime-local" class="form-control" id="startDate" name="startDate" value="@prefillStartDate" placeholder="Enter the starting date of the event">
             </div>
         </div>
 
@@ -48,9 +48,10 @@
             <label class="col-sm-3 col-form-label font-weight-bold" for="endingDate">End date of the event</label>
             <div class="col-sm-5">
                 @{
-                    var prefillEndDate = Model.EventUi.EndDate == default(DateTime) ? default(DateTime) : Model.EventUi.EndDate;
+                    var prefillEndDate = Model.EventUi.EndDate == default(DateTime) ? DateTime.Now.AddDays(1) : Model.EventUi.EndDate;
                 }
-                <input type="date" class="form-control" id="endingDate" name="endDate" value="@prefillEndDate" placeholder="Enter the ending date of the event">
+                <input type="datetime-local" class="form-control" id="endingDate" name="endDate" value="@prefillEndDate" placeholder="Enter the ending date of the event">
+
             </div>
         </div>
 
