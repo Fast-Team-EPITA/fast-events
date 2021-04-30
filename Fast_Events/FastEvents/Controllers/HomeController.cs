@@ -192,11 +192,11 @@ namespace FastEvents.Controllers
             // TODO remove one ticket to event in db
         }
 
-        public async Task<IActionResult> CreateEvent(string eventName, string organiserName, DateTime startDate, DateTime endDate, string category, int numberPlaces, string location, string description, string image)
+        public async Task<IActionResult> CreateEvent(CreateOrEditViewModel viewModel)
         {
             GetUserIdFromCookies();
             Category category1 = Category.Concert;
-            switch (category)
+            switch (viewModel.category)
             {
                 case "OpenAir":
                     category1 = Category.OpenAir;
@@ -208,15 +208,15 @@ namespace FastEvents.Controllers
 
             var ev = new Event
             {
-                Name = eventName ?? "",
-                Organizer = organiserName ?? "",
-                StartDate = startDate,
-                EndDate = endDate,
+                Name = viewModel.eventName ?? "",
+                Organizer = viewModel.organiserName ?? "",
+                StartDate = viewModel.startDate,
+                EndDate = viewModel.endingDate,
                 Category = category1,
-                Capacity = numberPlaces,
-                Location = location ?? "",
-                Description = description ?? "",
-                PictureFilename = image ?? "event_place_holder.jpg",
+                Capacity = viewModel.numberPlaces,
+                Location = viewModel.location ?? "",
+                Description = viewModel.description ?? "",
+                PictureFilename = viewModel.image ?? "event_place_holder.jpg",
                 OwnerUuid = _userId ?? ""
             };
 
