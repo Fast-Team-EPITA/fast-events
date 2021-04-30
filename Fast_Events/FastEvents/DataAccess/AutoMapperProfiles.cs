@@ -14,10 +14,10 @@ namespace FastEvents.DataAccess
             CreateMap<dbo.Stat, EfModels.Stat>();
             CreateMap<EfModels.Stat, dbo.Stat>();
 
-            CreateMap<dbo.EventUi, EfModels.EventView>()
+            CreateMap<dbo.Event, EfModels.Event>()
                  .ForMember(d => d.Category, 
                      o => o.MapFrom(y => y.Category.ToString()));
-            CreateMap<EfModels.EventView, dbo.EventUi>()
+            CreateMap<EfModels.Event, dbo.Event>()
                 .ForMember(d => d.Category,
                     o => o.MapFrom(y => Enum.Parse<Category>(y.Category)));
 

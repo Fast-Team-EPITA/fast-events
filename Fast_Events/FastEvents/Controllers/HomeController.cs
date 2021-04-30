@@ -194,6 +194,7 @@ namespace FastEvents.Controllers
 
         public async Task<IActionResult> CreateEvent(string eventName, string organiserName, DateTime startDate, DateTime endDate, string category, int numberPlaces, string location, string description, string image)
         {
+            GetUserIdFromCookies();
             Category category1 = Category.Concert;
             switch (category)
             {
@@ -207,15 +208,16 @@ namespace FastEvents.Controllers
 
             var ev = new Event
             {
-                Name = eventName,
-                Organizer = organiserName,
+                Name = eventName ?? "",
+                Organizer = organiserName ?? "",
                 StartDate = startDate,
                 EndDate = endDate,
                 Category = category1,
                 Capacity = numberPlaces,
-                Location = location,
-                Description = description,
-                PictureFilename = image,
+                Location = location ?? "",
+                Description = description ?? "",
+                PictureFilename = image ?? "event_place_holder.jpg",
+                OwnerUuid = _userId ?? ""
             };
 
             var insertedEvent = await _eventRepository.Insert(ev);
