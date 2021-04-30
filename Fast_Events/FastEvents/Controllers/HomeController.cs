@@ -148,9 +148,8 @@ namespace FastEvents.Controllers
         [Route("edit/{eventId:long?}")]
         public IActionResult CreateOrEdit(long? eventId = null)
         {
-            var model = eventId.HasValue
-                ? new CreateOrEditViewModel(_eventUiRepository.GetById(eventId.Value), false)
-                : new CreateOrEditViewModel(new EventUi(), true);
+            var eventUi = eventId.HasValue ? _eventUiRepository.GetById(eventId.Value) : new EventUi();
+            var model = new CreateOrEditViewModel().initWithEvent(eventUi, !eventId.HasValue);
             return View(model);
         }
 
@@ -192,6 +191,7 @@ namespace FastEvents.Controllers
             // TODO remove one ticket to event in db
         }
 
+        [HttpPost]
         public async Task<IActionResult> CreateEvent(CreateOrEditViewModel viewModel)
         {
             GetUserIdFromCookies();
@@ -211,7 +211,7 @@ namespace FastEvents.Controllers
                 Name = viewModel.eventName ?? "",
                 Organizer = viewModel.organiserName ?? "",
                 StartDate = viewModel.startDate,
-                EndDate = viewModel.endingDate,
+                EndDate = viewModel.endDate,
                 Category = category1,
                 Capacity = viewModel.numberPlaces,
                 Location = viewModel.location ?? "",
