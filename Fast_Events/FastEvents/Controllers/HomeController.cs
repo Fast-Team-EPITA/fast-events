@@ -74,7 +74,7 @@ namespace FastEvents.Controllers
                 PictureFilename = "event_place_holder.jpg",
                 OwnerUuid = _userId,
                 Category = Category.Concert,
-                NbAvailableTickets = 30
+                NumberTickets = 30
             };
 
             var event2 = new EventUi
@@ -91,7 +91,7 @@ namespace FastEvents.Controllers
                 PictureFilename = "event_place_holder.jpg",
                 OwnerUuid = "", //_userId,
                 Category = Category.Conference,
-                NbAvailableTickets = 0
+                NumberTickets = 0
             };
 
             var event3 = new EventUi
@@ -108,7 +108,7 @@ namespace FastEvents.Controllers
                 PictureFilename = "event_place_holder.jpg",
                 OwnerUuid = "", //_userId,
                 Category = Category.OpenAir,
-                NbAvailableTickets = 10
+                NumberTickets = 10
             };
             //return new List<EventUi> {event1, event2, event3};
             return (await _eventUiRepository.Get()).ToList();

@@ -1,8 +1,8 @@
 ﻿CREATE VIEW dbo.EventView
 AS
-SELECT        COUNT(*) AS number_tickets, dbo.Event.id, dbo.Event.name, dbo.Event.organizer, dbo.Event.start_date, dbo.Event.end_date, dbo.Event.capacity, dbo.Event.location, dbo.Event.description, dbo.Event.picture_filename, 
-                         dbo.Event.owner_uuid, dbo.Event.category
-FROM            dbo.Event INNER JOIN
+SELECT        COUNT(dbo.Ticket.id) AS number_tickets, dbo.Event.id, dbo.Event.name, dbo.Event.organizer, dbo.Event.start_date, dbo.Event.end_date, dbo.Event.capacity, dbo.Event.location, dbo.Event.description, 
+                         dbo.Event.picture_filename, dbo.Event.owner_uuid, dbo.Event.category
+FROM            dbo.Event LEFT OUTER JOIN
                          dbo.Ticket ON dbo.Event.id = dbo.Ticket.event_id
 GROUP BY dbo.Event.id, dbo.Event.name, dbo.Event.organizer, dbo.Event.start_date, dbo.Event.end_date, dbo.Event.capacity, dbo.Event.location, dbo.Event.description, dbo.Event.picture_filename, dbo.Event.owner_uuid, 
                          dbo.Event.category
@@ -97,7 +97,7 @@ Begin DesignProperties =
                Top = 6
                Left = 284
                Bottom = 136
-               Right = 492
+               Right = 508
             End
             DisplayFlags = 280
             TopColumn = 0
@@ -129,4 +129,6 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'EventView';
+
+
 

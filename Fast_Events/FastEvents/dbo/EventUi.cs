@@ -18,7 +18,7 @@ namespace FastEvents.dbo
         public string PictureFilename { get; set; }
         public string OwnerUuid { get; set; }
         public Category Category { get; set; }
-        public int? NbAvailableTickets { get; set; }
+        public int NumberTickets { get; set; }
 
     }
 }
