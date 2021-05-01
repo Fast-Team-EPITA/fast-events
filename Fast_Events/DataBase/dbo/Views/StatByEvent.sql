@@ -1,10 +1,9 @@
-﻿CREATE VIEW dbo.[StatByEvent]
+﻿CREATE VIEW dbo.StatByEvent
 AS
-SELECT        TOP (100) PERCENT COUNT(*) AS number_view, dbo.Event.name
-FROM            dbo.Stat INNER JOIN
+SELECT        COUNT(dbo.Stat.id) AS number_view, dbo.Event.name, dbo.Event.id
+FROM            dbo.Stat LEFT OUTER JOIN
                          dbo.Event ON dbo.Stat.event_id = dbo.Event.id
-GROUP BY dbo.Stat.event_id, dbo.Event.name
-ORDER BY dbo.Event.name
+GROUP BY dbo.Stat.event_id, dbo.Event.name, dbo.Event.id
 GO
 EXECUTE sp_addextendedproperty @name = N'MS_DiagramPaneCount', @value = 1, @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'StatByEvent';
 
@@ -81,25 +80,25 @@ Begin DesignProperties =
          Left = 0
       End
       Begin Tables = 
-         Begin Table = "Stat"
+         Begin Table = "Stat (dbo)"
             Begin Extent = 
                Top = 6
                Left = 38
                Bottom = 119
-               Right = 246
+               Right = 262
             End
             DisplayFlags = 280
             TopColumn = 0
          End
-         Begin Table = "Event"
+         Begin Table = "Event (dbo)"
             Begin Extent = 
-               Top = 6
-               Left = 284
-               Bottom = 136
-               Right = 508
+               Top = 15
+               Left = 451
+               Bottom = 145
+               Right = 675
             End
             DisplayFlags = 280
-            TopColumn = 0
+            TopColumn = 1
          End
       End
    End
@@ -128,4 +127,6 @@ Begin DesignProperties =
    End
 End
 ', @level0type = N'SCHEMA', @level0name = N'dbo', @level1type = N'VIEW', @level1name = N'StatByEvent';
+
+
 
