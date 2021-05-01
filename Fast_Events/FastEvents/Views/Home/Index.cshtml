@@ -1,4 +1,5 @@
-﻿@model IndexViewModel
+﻿@using FastEvents.dbo
+@model IndexViewModel
 
 @{
     ViewData["Title"] = "Home Page";
@@ -12,9 +13,9 @@
             </button>
             <form class="dropdown-menu" aria-labelledby="dropdownMenuButton" method="post">
                 <button class="dropdown-item" asp-action="Index">All</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@IndexViewModel.Category.Concert">Concert</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@IndexViewModel.Category.Conference">Conference</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@IndexViewModel.Category.OpenAir">Open Air</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.Concert">Concert</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.Conference">Conference</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.OpenAir">Open Air</button>
             </form>
         </div>
 

@@ -11,6 +11,7 @@ using FastEvents.DataAccess.EfModels;
 using FastEvents.DataAccess.Interfaces;
 using FastEvents.dbo;
 using FastEvents.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using QRCoder;
 using Event = FastEvents.dbo.Event;
 using Stat = FastEvents.dbo.Stat;
@@ -58,62 +59,6 @@ namespace FastEvents.Controllers
                 _userId = value;
         }
 
-        private async Task<List<EventUi>> GetEvents()
-        {
-            var event1 = new EventUi
-            {
-                Id = 1,
-                Name = "A Fast Event 1",
-                Organizer = "B Fast Team",
-                StartDate = DateTime.Now.AddDays(1),
-                EndDate = DateTime.Now.AddDays(2),
-                Capacity = 100,
-                Location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
-                Description =
-                    "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
-                PictureFilename = "event_place_holder.jpg",
-                OwnerUuid = _userId,
-                Category = Category.Concert,
-                NumberTickets = 30
-            };
-
-            var event2 = new EventUi
-            {
-                Id = 2,
-                Name = "C Fast Event 2",
-                Organizer = "A Fast Team",
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now.AddDays(1),
-                Capacity = 50,
-                Location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
-                Description =
-                    "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
-                PictureFilename = "event_place_holder.jpg",
-                OwnerUuid = "", //_userId,
-                Category = Category.Conference,
-                NumberTickets = 0
-            };
-
-            var event3 = new EventUi
-            {
-                Id = 3,
-                Name = "B dast Event 3",
-                Organizer = "C dast Team",
-                StartDate = DateTime.Now.AddDays(3),
-                EndDate = DateTime.Now.AddDays(4),
-                Capacity = 100,
-                Location = "1 Rue Voltaire, 94270, Le Kremlin Bicetre",
-                Description =
-                    "This event is a special techno party to have fun and listen to techno. The most famous DJs will be here, comme check it out it's free. We hope to see you there !",
-                PictureFilename = "event_place_holder.jpg",
-                OwnerUuid = "", //_userId,
-                Category = Category.OpenAir,
-                NumberTickets = 10
-            };
-            //return new List<EventUi> {event1, event2, event3};
-            return (await _eventUiRepository.Get()).ToList();
-        }
-
 
         /**
          *  View Navigation
@@ -121,7 +66,7 @@ namespace FastEvents.Controllers
         public async Task<IActionResult> Index(Category? sortCategory = null, string sortType = null, bool ownedEvents = false, string searchPattern = null)
         {
             GetUserIdFromCookies();
-            var events = await GetEvents();
+            var events = (await _eventUiRepository.Get()).ToList();
             if (sortCategory != null)
                 events = SortByCategory(sortCategory, events);
 
@@ -148,8 +93,8 @@ namespace FastEvents.Controllers
         [Route("edit/{eventId:long?}")]
         public IActionResult CreateOrEdit(long? eventId = null)
         {
-            var eventUi = eventId.HasValue ? _eventUiRepository.GetById(eventId.Value) : new EventUi();
-            var model = new CreateOrEditViewModel().initWithEvent(eventUi, !eventId.HasValue);
+            var eventUi = eventId.HasValue ? _eventUiRepository.GetById(eventId.Value) : new EventUi { StartDate = DateTime.Now, EndDate = DateTime.Now};
+            var model = new CreateOrEditViewModel { EventUi = eventUi, IsCreate = !eventId.HasValue };
             return View(model);
         }
 
@@ -171,109 +116,66 @@ namespace FastEvents.Controllers
         {
             return View();
         }
-        
-        
+
+
         /**
          *  Button Actions
          */
-
         public async Task<IActionResult> CancelEvent(long eventId)
         {
             await _eventUiRepository.Delete(eventId);
-            return await Index();
-            // TODO add one ticket to event in db
+            var events = (await _eventUiRepository.Get()).ToList();
+            var model = new IndexViewModel(events);
+            return View("Index", model);
         }
 
-        public async Task<IActionResult> CancelReservation(long eventId)
+        public async Task<IActionResult> CancelReservation(long ticketId)
         {
-            //await _ticketRepository.Delete(_ticketRepository.GetByOwnerId());
-            return await Index();
-            // TODO remove one ticket to event in db
+            await _ticketRepository.Delete(ticketId);
+            var model = new TicketsViewModel(_ticketRepository.GetByOwnerId(_userId));
+            return View("Tickets", model);
+        }
+        
+        public IActionResult GenerateAndDownloadQrCode(long eventId)
+        {
+            var filename = GenerateQrCode();
+            var ticket = new Ticket {EventId = eventId, OwnerUuid = _userId, QrcFilename = filename};
+            _ticketRepository.Insert(ticket);
+            return DownloadQrCode(filename);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEvent(CreateOrEditViewModel viewModel)
+        public async Task<IActionResult> SaveEvent(CreateOrEditViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Error = $"You didn't fill {ModelState.ErrorCount} forms";
+                return View("CreateOrEdit", viewModel);
+            }
+
             GetUserIdFromCookies();
-            Category category1 = Category.Concert;
-            switch (viewModel.category)
-            {
-                case "OpenAir":
-                    category1 = Category.OpenAir;
-                    break;
-                case "Conference":
-                    category1 = Category.Conference;
-                    break;
-            }
-
-            var ev = new Event
-            {
-                Name = viewModel.eventName ?? "",
-                Organizer = viewModel.organiserName ?? "",
-                StartDate = viewModel.startDate,
-                EndDate = viewModel.endDate,
-                Category = category1,
-                Capacity = viewModel.numberPlaces,
-                Location = viewModel.location ?? "",
-                Description = viewModel.description ?? "",
-                PictureFilename = viewModel.image ?? "event_place_holder.jpg",
-                OwnerUuid = _userId ?? ""
-            };
-
-            var insertedEvent = await _eventRepository.Insert(ev);
-            
+            var insertedEvent = viewModel.IsCreate
+                ? await _eventRepository.Insert(new Event(viewModel.EventUi) {OwnerUuid = _userId})
+                : await _eventRepository.Update(new Event(viewModel.EventUi) {OwnerUuid = _userId});
             var model = await PrepareDetailModel(insertedEvent.Id);
-            return View("Detail", model);
-        }
-
-        public async Task<IActionResult> EditEvent(string eventName, string organiserName, DateTime startDate, DateTime endDate, string category, int numberPlaces, string location, string description, string image, int eventId)
-        {
-            Category category1 = Category.Concert;
-            switch (category)
-            {
-                case "OpenAir":
-                    category1 = Category.OpenAir;
-                    break;
-                case "Conference":
-                    category1 = Category.Conference;
-                    break;
-            }
-
-            var ev = new Event
-            {
-                Id = eventId,
-                Name = eventName,
-                Organizer = organiserName,
-                StartDate = startDate,
-                EndDate = endDate,
-                Category = category1,
-                Capacity = numberPlaces,
-                Location = location,
-                Description = description,
-                PictureFilename = image,
-            };
-
-            await _eventRepository.Update(ev);
-            
-            
-            var model = await PrepareDetailModel(eventId);
             return View("Detail", model);
         }
 
         /**
          *  Prepare models
          */
-
         private async Task<DetailViewModel> PrepareDetailModel(long eventId)
         {
+            GetUserIdFromCookies();
             var stat = new Stat {Date = DateTime.Now, EventId = eventId};
             await _statRepository.Insert(stat);
 
             var selectedEvent = _eventUiRepository.GetById(eventId);
             var isOwner = selectedEvent.OwnerUuid == _userId;
-            var hasTicket = _ticketRepository.GetByOwnerId(_userId).FirstOrDefault(ticket => ticket.EventUi.Id == eventId) != null;
+            var hasTicket = _ticketRepository.GetByOwnerId(_userId)
+                .FirstOrDefault(ticket => ticket.EventUi.Id == eventId) != null;
 
-            return new DetailViewModel(selectedEvent, isOwner, hasTicket);
+            return new DetailViewModel { EventUi = selectedEvent, IsOwner = isOwner, HasTicket = hasTicket };
         }
 
 
@@ -303,20 +205,15 @@ namespace FastEvents.Controllers
 
         private static List<EventUi> SortSearchPattern(string searchPattern, List<EventUi> events)
         {
-            return events.Where(ev => ev.Name.ToLower().Contains(searchPattern.ToLower()) || ev.Organizer.ToLower().Contains(searchPattern.ToLower())).ToList();
+            return events.Where(ev =>
+                ev.Name.ToLower().Contains(searchPattern.ToLower()) ||
+                ev.Organizer.ToLower().Contains(searchPattern.ToLower())).ToList();
         }
 
 
         /**
          *  QR Code Management
          */
-        public IActionResult GenerateAndDownloadQrCode(long eventId)
-        {
-            var filename = GenerateQrCode();
-            var ticket = new Ticket { EventId = eventId, OwnerUuid = _userId, QrcFilename = filename };
-            _ticketRepository.Insert(ticket);
-            return DownloadQrCode(filename);
-        }
 
         private string GenerateQrCode()
         {

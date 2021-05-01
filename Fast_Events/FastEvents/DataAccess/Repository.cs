@@ -30,15 +30,11 @@ namespace FastEvents.DataAccess
         {
             try
             {
-                List<DBEntity> query = null;
-                if (String.IsNullOrEmpty(includeTables))
-                {
+                List<DBEntity> query;
+                if (string.IsNullOrEmpty(includeTables))
                     query = await _set.AsNoTracking().ToListAsync();
-                }
                 else
-                {
                     query = await _set.Include(includeTables).AsNoTracking().ToListAsync();
-                }
 
                 return _mapper.Map<ModelEntity[]>(query);
             }
@@ -70,17 +66,13 @@ namespace FastEvents.DataAccess
         public virtual async Task<ModelEntity> Update(ModelEntity entity)
         {
             DBEntity dbEntity = _set.Find(entity.Id);
-
-
             if (dbEntity == null)
-            {
                 return null;
-            }
+            
             _mapper.Map(entity, dbEntity);
             if (!_context.ChangeTracker.HasChanges())
-            {
                 return entity;
-            }
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -90,19 +82,16 @@ namespace FastEvents.DataAccess
                 _logger.LogError("error on db", ex);
                 return null;
             }
+            
             return _mapper.Map<ModelEntity>(dbEntity);
-
         }
 
         public virtual async Task<bool> Delete(long idEntity)
         {
             DBEntity dbEntity = _set.Find(idEntity);
-
-
             if (dbEntity == null)
-            {
                 return false;
-            }
+            
             _set.Remove(dbEntity);
             try
             {

@@ -2,14 +2,17 @@
 @model DetailViewModel
 
 @{
+    ViewData["Title"] = Model.EventUi.Name;
     var places = Model.EventUi.Capacity - Model.EventUi.NumberTickets + "/" + Model.EventUi.Capacity;
+    var imagePath = @"..\Resources\Images\" + Model.EventUi.PictureFilename;
+    var googleMapLink = "https://www.google.com/maps/search/?api=1&query=" + Model.EventUi.Location.Replace(" ", "+");
 }
 
 <div>
     <div class="row">
         
         <div class="col pt-4">
-            <img src="@Model.ImagePath" alt="Event Image" width="600px"/>
+            <img src="@imagePath" alt="Event Image" width="600px"/>
         </div>
 
         <div class="col">
@@ -26,7 +29,7 @@
                         <td>@Html.DisplayFor(model => model.EventUi.Category)</td>
                     </tr>
                     <tr>
-                        <th>Places</th>
+                        <th>Places Available</th>
                         <td>
                             @places
                         </td>
@@ -34,7 +37,7 @@
                     <tr>
                         <th>Location</th>
                         <td>
-                            <a href="@Model.GoogleMapLink" target="_blank">
+                            <a href="@googleMapLink" target="_blank">
                                 @Html.DisplayFor(model => model.EventUi.Location)
                             </a>
                         </td>
@@ -98,7 +101,7 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             No
                         </button>
-                        <button class="btn btn-primary" asp-controller="Home" asp-action="Index">
+                        <button class="btn btn-primary" asp-action="CancelEvent" asp-route-eventId="@Model.EventUi.Id">
                             Yes, cancel the event
                         </button>
                     </form>
@@ -108,7 +111,7 @@
     }
     
     <form class="text-center mt-2" method="post">
-        <button @Html.Raw(Model.HasTicket ? "disabled" : "") class="btn btn-primary btn-lg" asp-controller="Home" asp-action="GenerateAndDownloadQrCode">
+        <button @Html.Raw(Model.HasTicket ? "disabled" : "") class="btn btn-primary btn-lg" asp-action="GenerateAndDownloadQrCode" asp-route-eventId="@Model.EventUi.Id">
             Order and Download my ticket
         </button>
     </form>

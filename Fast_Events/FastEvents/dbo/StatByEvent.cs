@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FastEvents.dbo
 {
-    public class StatByEvent : Interfaces.IObjectWithId
+    public class StatByEvent
     {
         public int NumberView { get; set; }
         public string Name { get; set; }

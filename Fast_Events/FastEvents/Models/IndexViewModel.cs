@@ -8,13 +8,6 @@ namespace FastEvents.Models
 {
     public class IndexViewModel
     {
-        public enum Category
-        {
-            Concert,
-            Conference,
-            OpenAir
-        }
-
         public List<EventUi> EventUis { get; set; }
 
         public IndexViewModel(List<EventUi> eventUis)

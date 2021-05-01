@@ -19,5 +19,22 @@ namespace FastEvents.dbo
         public string OwnerUuid { get; set; }
         public Category Category { get; set; }
 
+        public Event() {}
+        
+        public Event(EventUi eventUi)
+        {
+            Id = eventUi.Id;
+            Name = eventUi.Name ?? "";
+            Organizer = eventUi.Organizer ?? "";
+            StartDate = eventUi.StartDate;
+            EndDate = eventUi.EndDate;
+            Capacity = eventUi.Capacity;
+            Location = eventUi.Location ?? "";
+            Description = eventUi.Description ?? "";
+            PictureFilename = eventUi.PictureFilename ?? "event_place_holder.jpg";
+            OwnerUuid = eventUi.OwnerUuid ?? "";
+            Category = eventUi.Category;
+        } 
+
     }
 }

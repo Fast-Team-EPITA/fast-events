@@ -2,6 +2,7 @@
 @model TicketsViewModel
 
 @{
+    ViewData["Title"] = "My Tickets";
 }
 
 <div>
@@ -47,7 +48,7 @@
                             </div>
                             <form method="post" class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                                <button class="btn btn-primary" asp-action="Index">Yes, cancel my reservation</button>
+                                <button class="btn btn-primary" asp-action="CancelReservation" asp-route-ticketId="@ticket.Id">Yes, cancel my reservation</button>
                             </form>
                         </div>
                     </div>
