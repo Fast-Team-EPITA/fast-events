@@ -1,6 +1,7 @@
 ﻿using FastEvents.dbo;
 using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace FastEvents.Models
 {
@@ -8,7 +9,6 @@ namespace FastEvents.Models
     {
         public EventUi EventUi { get; set; }
         public bool IsCreate { get; set; }
-        
-        public string Error { get; set; }
+        public IFormFile PictureFile { get; set; }
     }
 }

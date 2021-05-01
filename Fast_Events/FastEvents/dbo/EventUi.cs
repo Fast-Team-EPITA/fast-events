@@ -16,7 +16,11 @@ namespace FastEvents.dbo
         [Required(AllowEmptyStrings = false)]
         [MaxLength(50)]
         public string Organizer { get; set; }
+        [DataType(DataType.DateTime), Required]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
+        [DataType(DataType.DateTime), Required]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
         public int Capacity { get; set; }
         [Required(AllowEmptyStrings = false)]

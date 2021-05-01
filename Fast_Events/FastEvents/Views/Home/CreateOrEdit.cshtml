@@ -10,7 +10,7 @@
     
     <h1 class="mb-4 text-center">@title</h1>
 
-    @using (Html.BeginForm("SaveEvent", "Home", FormMethod.Post))
+    @using (Html.BeginForm("SaveEvent", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         
         @Html.AntiForgeryToken()
@@ -18,28 +18,28 @@
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">Name of the event</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the name of your event", required = true  } })
+                @Html.EditorFor(m => m.EventUi.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "My Event", required = true } })
             </div>
         </div>
 
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">Name of the organiser</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.Organizer, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the name of the organiser", required = true  } })
+                @Html.EditorFor(m => m.EventUi.Organizer, new { htmlAttributes = new { @class = "form-control", placeholder = "My Organisation", required = true } })
             </div>
         </div>
 
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">Start date of the event</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.StartDate, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the starting date of the event", type = "datetime-local" } })
+                @Html.EditorFor(m => m.EventUi.StartDate, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the starting date of the event", type = "datetime-local", required = true } })
             </div>
         </div>
 
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">End date of the event</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.EndDate, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the ending date of the event", type = "datetime-local" } })
+                @Html.EditorFor(m => m.EventUi.EndDate, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the ending date of the event", type = "datetime-local", required = true } })
             </div>
         </div>
 
@@ -64,14 +64,14 @@
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">Location of the event</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.Location, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the location of the event", type = "text", required = true  } })
+                @Html.EditorFor(m => m.EventUi.Location, new { htmlAttributes = new { @class = "form-control", placeholder = "1 Anyroad RD, Anytown AZ 01234", type = "text", required = true  } })
             </div>
         </div>
 
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">Description of the event</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.Description, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the description of the event", type = "text" } })
+                @Html.TextAreaFor(m => m.EventUi.Description, new { htmlAttributes = new { @class = "form-control", placeholder = "Description of the event", rows = "6", cols = "50", maxlength = "500" } })
                 <small id="descriptionHelp" class="form-text text-muted">Maximum of 500 characters</small>
             </div>
         </div>
@@ -79,16 +79,17 @@
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">Image</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.PictureFilename, new { htmlAttributes = new { type = "file" } })
+                @Html.EditorFor(m => m.PictureFile, new { htmlAttributes = new { type = "file" } })
             </div>
         </div>
+
+        <div class="text-center">
+            <input class="btn btn-primary btn-lg form-group" value="Save event" type="submit"/>
+        </div>
         
-        @Html.DisplayFor(m => m.Error, new { htmlAttributes = new { @class = "text-danger form-group", required = true } })
-
-        <input class="btn btn-primary btn-lg form-group" value="Save event" type="submit"/>
-
         @Html.HiddenFor(m => m.IsCreate)
         @Html.HiddenFor(m => m.EventUi.Id)
+        @Html.HiddenFor(m => m.EventUi.PictureFilename)
     }
 
 </div>

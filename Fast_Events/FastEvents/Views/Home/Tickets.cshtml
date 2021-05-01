@@ -6,32 +6,44 @@
 }
 
 <div>
+    @if (Model.Tickets.Count == 0)
+    {
+        <div class="card">
+            <div class="card-header">
+                You do not have reserved any tickets.
+            </div>
+            <div class="card-body text-center">
+                Go to main page to browse events and reserve a ticket.
+            </div>
+        </div>    
+    }
+    
     @foreach (var ticket in Model.Tickets)
     {
         <div class="card">
             <div class="row card-body">
-                
+
                 <a class="col" asp-action="DownloadQrCode" asp-route-qrCodeFilename="@ticket.QrcFilename">
                     <img src="/Resources/Images/qr_code.png" alt="QR Code" width="200px">
                 </a>
-                
+
                 <div class="col">
                     <table class="table table-borderless">
                         <tbody>
-                            <tr>
-                                <td colspan="2" class="h2">@ticket.EventName</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <form method="post" colspan="2">
-                                        <button class="btn btn-primary btn-md" asp-action="Detail" asp-route-eventId="@ticket.EventId">Go to event page</button>
-                                    </form>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td colspan="2" class="h2">@ticket.Event.Name</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <form method="post" colspan="2">
+                                    <button class="btn btn-primary btn-md" asp-action="Detail" asp-route-eventId="@ticket.EventId">Go to event page</button>
+                                </form>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
-                
+
                 <button class="btn btn-danger btn-lg m-4" data-toggle="modal" data-target="#cancelReservationModal">Cancel my reservation</button>
                 <div class="modal fade" id="cancelReservationModal" tabindex="-1" role="dialog" aria-labelledby="cancelReservationModal" aria-hidden="true">
                     <div class="modal-dialog" role="document">

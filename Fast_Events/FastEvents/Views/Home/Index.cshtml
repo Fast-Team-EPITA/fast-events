@@ -50,6 +50,18 @@
             </form>
     </nav>
 
+    @if (Model.EventUis.Count == 0)
+    {
+        <div class="card">
+            <div class="card-header">
+                There is no events for the specified filters.
+            </div>
+            <div class="card-body text-center">
+                Change the filters to see other events.
+            </div>
+        </div>    
+    }
+    
     @foreach (var ev in Model.EventUis)
     {
         <form method="post" class="m-4 d-flex text-center">

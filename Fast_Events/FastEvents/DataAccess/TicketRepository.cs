@@ -22,9 +22,12 @@ namespace FastEvents.DataAccess
             return result.Count();
         }
 
-        List<dbo.Ticket> ITicketRepository.GetByOwnerId(string ownerId)
+        public List<dbo.Ticket> GetByOwnerId(string ownerId)
         {
-            var result = _context.Tickets.Where(x => x.OwnerUuid == ownerId);
+            var result = _context.Tickets.Where(x => x.OwnerUuid == ownerId).ToList();
+            foreach (var ticket in result)
+                _context.Entry(ticket).Reference(r => r.Event).Load();
+            
             return _mapper.Map<List<dbo.Ticket>>(result);
         }
     }

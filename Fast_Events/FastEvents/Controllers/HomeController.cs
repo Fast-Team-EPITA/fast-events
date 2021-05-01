@@ -11,6 +11,7 @@ using FastEvents.DataAccess.EfModels;
 using FastEvents.DataAccess.Interfaces;
 using FastEvents.dbo;
 using FastEvents.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using QRCoder;
 using Event = FastEvents.dbo.Event;
@@ -32,6 +33,8 @@ namespace FastEvents.Controllers
 
         private static readonly string QrCodesPath =
             Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "QRCodes");
+        private static readonly string ImagesPath =
+            Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "Images");
 
         public HomeController(ILogger<HomeController> logger, IEventUiRepository eventUiRepository,
             ITicketRepository ticketRepository, IStatRepository statRepository, IEventRepository eventRepository)
@@ -86,14 +89,23 @@ namespace FastEvents.Controllers
         [Route("detail/{eventId:long}")]
         public async Task<IActionResult> Detail(long eventId)
         {
-            var model = await PrepareDetailModel(eventId);
+            GetUserIdFromCookies();
+            var stat = new Stat {Date = DateTime.Now, EventId = eventId};
+            await _statRepository.Insert(stat);
+
+            var selectedEvent = _eventUiRepository.GetById(eventId);
+            var isOwner = selectedEvent.OwnerUuid == _userId;
+            var tickets = _ticketRepository.GetByOwnerId(_userId);
+            var hasTicket = tickets?.FirstOrDefault(ticket => ticket.EventId == eventId) != null;
+
+            var model = new DetailViewModel { EventUi = selectedEvent, IsOwner = isOwner, HasTicket = hasTicket };
             return View(model);
         }
 
         [Route("edit/{eventId:long?}")]
         public IActionResult CreateOrEdit(long? eventId = null)
         {
-            var eventUi = eventId.HasValue ? _eventUiRepository.GetById(eventId.Value) : new EventUi { StartDate = DateTime.Now, EndDate = DateTime.Now};
+            var eventUi = eventId.HasValue ? _eventUiRepository.GetById(eventId.Value) : new EventUi();
             var model = new CreateOrEditViewModel { EventUi = eventUi, IsCreate = !eventId.HasValue };
             return View(model);
         }
@@ -101,6 +113,7 @@ namespace FastEvents.Controllers
         [Route("tickets")]
         public IActionResult Tickets()
         {
+            GetUserIdFromCookies();
             var model = new TicketsViewModel(_ticketRepository.GetByOwnerId(_userId));
             return View(model);
         }
@@ -124,23 +137,22 @@ namespace FastEvents.Controllers
         public async Task<IActionResult> CancelEvent(long eventId)
         {
             await _eventUiRepository.Delete(eventId);
-            var events = (await _eventUiRepository.Get()).ToList();
-            var model = new IndexViewModel(events);
-            return View("Index", model);
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> CancelReservation(long ticketId)
         {
             await _ticketRepository.Delete(ticketId);
-            var model = new TicketsViewModel(_ticketRepository.GetByOwnerId(_userId));
-            return View("Tickets", model);
+            return RedirectToAction("Tickets");
         }
         
-        public IActionResult GenerateAndDownloadQrCode(long eventId)
+        [HttpPost]
+        public async Task<IActionResult> GenerateAndDownloadQrCode(long eventId)
         {
+            GetUserIdFromCookies();
             var filename = GenerateQrCode();
-            var ticket = new Ticket {EventId = eventId, OwnerUuid = _userId, QrcFilename = filename};
-            _ticketRepository.Insert(ticket);
+            var ticket = new Ticket { EventId = eventId, OwnerUuid = _userId, QrcFilename = filename };
+            await _ticketRepository.Insert(ticket);
             return DownloadQrCode(filename);
         }
 
@@ -148,34 +160,20 @@ namespace FastEvents.Controllers
         public async Task<IActionResult> SaveEvent(CreateOrEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
-            {
-                viewModel.Error = $"You didn't fill {ModelState.ErrorCount} forms";
                 return View("CreateOrEdit", viewModel);
-            }
+            
+            var fileName = viewModel.PictureFile != null ? viewModel.PictureFile.FileName : viewModel.EventUi.PictureFilename ?? "event_place_holder.jpg";
+            if (viewModel.PictureFile != null)
+                await using (var stream = System.IO.File.Create(Path.Join(ImagesPath, fileName)))
+                    await viewModel.PictureFile.CopyToAsync(stream);
+            
 
             GetUserIdFromCookies();
             var insertedEvent = viewModel.IsCreate
-                ? await _eventRepository.Insert(new Event(viewModel.EventUi) {OwnerUuid = _userId})
-                : await _eventRepository.Update(new Event(viewModel.EventUi) {OwnerUuid = _userId});
-            var model = await PrepareDetailModel(insertedEvent.Id);
-            return View("Detail", model);
-        }
+                ? await _eventRepository.Insert(new Event(viewModel.EventUi) {OwnerUuid = _userId, PictureFilename = fileName})
+                : await _eventRepository.Update(new Event(viewModel.EventUi) {OwnerUuid = _userId, PictureFilename = fileName});
 
-        /**
-         *  Prepare models
-         */
-        private async Task<DetailViewModel> PrepareDetailModel(long eventId)
-        {
-            GetUserIdFromCookies();
-            var stat = new Stat {Date = DateTime.Now, EventId = eventId};
-            await _statRepository.Insert(stat);
-
-            var selectedEvent = _eventUiRepository.GetById(eventId);
-            var isOwner = selectedEvent.OwnerUuid == _userId;
-            var hasTicket = _ticketRepository.GetByOwnerId(_userId)
-                .FirstOrDefault(ticket => ticket.EventUi.Id == eventId) != null;
-
-            return new DetailViewModel { EventUi = selectedEvent, IsOwner = isOwner, HasTicket = hasTicket };
+            return RedirectToAction("Detail", viewModel.EventUi.Id);
         }
 
 

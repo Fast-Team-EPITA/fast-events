@@ -110,10 +110,13 @@
         </div>
     }
     
-    <form class="text-center mt-2" method="post">
-        <button @Html.Raw(Model.HasTicket ? "disabled" : "") class="btn btn-primary btn-lg" asp-action="GenerateAndDownloadQrCode" asp-route-eventId="@Model.EventUi.Id">
-            Order and Download my ticket
-        </button>
-    </form>
+    <div class="text-center">
+        @using (Html.BeginForm("GenerateAndDownloadQrCode", "Home", new {eventId = Model.EventUi.Id}, FormMethod.Post))
+        {
+            <button type="submit" @Html.Raw(Model.HasTicket ? "disabled" : "") class="btn btn-primary btn-lg align-self-center">
+                Order and Download my ticket
+            </button>
+        }
+    </div>
 
 </div>
