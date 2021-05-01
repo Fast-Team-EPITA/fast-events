@@ -4,7 +4,8 @@ namespace FastEvents.DataAccess.EfModels
 {
     public partial class StatByEvent
     {
-        public int? NumberView { get; set; }
+        public int NumberView { get; set; }
         public string Name { get; set; }
+        public long Id { get; set; }
     }
 }
