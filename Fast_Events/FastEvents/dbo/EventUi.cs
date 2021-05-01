@@ -22,10 +22,8 @@ namespace FastEvents.dbo
         [Required(AllowEmptyStrings = false)]
         [MaxLength(200)]
         public string Location { get; set; }
-        [Required]
         [MaxLength(500)]
         public string Description { get; set; }
-        [Required(AllowEmptyStrings = false)]
         [MaxLength(50)]
         public string PictureFilename { get; set; }
         public string OwnerUuid { get; set; }

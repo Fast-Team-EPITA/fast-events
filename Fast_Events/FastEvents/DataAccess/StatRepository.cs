@@ -18,7 +18,7 @@ namespace FastEvents.DataAccess
 
         public dbo.StatByEvent GetByEvent(long eventId)
         {
-            var result = _context.Stats.FirstOrDefault(x => x.EventId == eventId);
+            var result = _context.StatByEvents.FirstOrDefault(x => x.Id == eventId);
             return _mapper.Map<dbo.StatByEvent>(result);
         }
     }

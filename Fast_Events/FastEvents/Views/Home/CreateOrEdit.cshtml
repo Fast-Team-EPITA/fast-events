@@ -18,14 +18,14 @@
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">Name of the event</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the name of your event" } })
+                @Html.EditorFor(m => m.EventUi.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the name of your event", required = true  } })
             </div>
         </div>
 
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">Name of the organiser</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.Organizer, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the name of the organiser" } })
+                @Html.EditorFor(m => m.EventUi.Organizer, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the name of the organiser", required = true  } })
             </div>
         </div>
 
@@ -64,7 +64,7 @@
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">Location of the event</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.Location, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the location of the event", type = "text" } })
+                @Html.EditorFor(m => m.EventUi.Location, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter the location of the event", type = "text", required = true  } })
             </div>
         </div>
 
@@ -83,7 +83,7 @@
             </div>
         </div>
         
-        @Html.DisplayFor(m => m.Error, new { htmlAttributes = new { @class = "text-danger form-group" } })
+        @Html.DisplayFor(m => m.Error, new { htmlAttributes = new { @class = "text-danger form-group", required = true } })
 
         <input class="btn btn-primary btn-lg form-group" value="Save event" type="submit"/>
 
