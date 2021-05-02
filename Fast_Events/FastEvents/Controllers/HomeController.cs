@@ -87,7 +87,7 @@ namespace FastEvents.Controllers
         }
 
         [Route("detail/{eventId:long}")]
-        public async Task<IActionResult> Detail(long eventId)
+        public async Task<IActionResult> Detail(long eventId, string fileToDownload = null)
         {
             GetUserIdFromCookies();
             var stat = new Stat {Date = DateTime.Now, EventId = eventId};
@@ -136,7 +136,7 @@ namespace FastEvents.Controllers
          */
         public async Task<IActionResult> CancelEvent(long eventId)
         {
-            await _eventUiRepository.Delete(eventId);
+            await _eventRepository.Delete(eventId);
             return RedirectToAction("Index");
         }
 
