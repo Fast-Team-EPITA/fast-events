@@ -113,7 +113,7 @@
     <div class="text-center">
         @using (Html.BeginForm("GenerateAndDownloadQrCode", "Home", new {eventId = Model.EventUi.Id}, FormMethod.Post))
         {
-            <button type="submit" @Html.Raw(Model.HasTicket ? "disabled" : "") class="btn btn-primary btn-lg align-self-center">
+            <button type="submit" @Html.Raw(Model.HasTicket ? "disabled" : "") class="btn btn-primary btn-lg align-self-center" onclick="this.form.submit(); this.disabled=true">
                 Order and Download my ticket
             </button>
         }

@@ -18,6 +18,9 @@ using Event = FastEvents.dbo.Event;
 using Stat = FastEvents.dbo.Stat;
 using Ticket = FastEvents.dbo.Ticket;
 
+// TODO Remove event if finished
+// TODO Tests unitaires
+
 namespace FastEvents.Controllers
 {
     public class HomeController : Controller
@@ -27,7 +30,7 @@ namespace FastEvents.Controllers
         private readonly IEventUiRepository _eventUiRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly IStatRepository _statRepository;
-        private readonly QRCodeGenerator _qrCodeGenerator = new();
+        private readonly QRCodeGenerator _qrCodeGenerator;
 
         private string _userId;
 
@@ -44,6 +47,7 @@ namespace FastEvents.Controllers
             _ticketRepository = ticketRepository;
             _statRepository = statRepository;
             _eventRepository = eventRepository;
+            _qrCodeGenerator = new QRCodeGenerator();
         }
 
 
@@ -140,12 +144,15 @@ namespace FastEvents.Controllers
         /**
          *  Button Actions
          */
+        [HttpPost]
         public async Task<IActionResult> CancelEvent(long eventId)
         {
+            // TODO It seems that it doesnt get the changes on the redirection
             await _eventRepository.Delete(eventId);
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
         public async Task<IActionResult> CancelReservation(long ticketId)
         {
             await _ticketRepository.Delete(ticketId);
