@@ -18,8 +18,7 @@ namespace FastEvents.DataAccess
 
         public int GetNbBookedByEventId(long eventId)
         {
-            var result = _context.Tickets.Where(x => x.EventId == eventId);
-            return result.Count();
+            return _context.Tickets.Count(x => x.EventId == eventId);
         }
 
         public List<dbo.Ticket> GetByOwnerId(string ownerId)
@@ -27,7 +26,6 @@ namespace FastEvents.DataAccess
             var result = _context.Tickets.Where(x => x.OwnerUuid == ownerId).ToList();
             foreach (var ticket in result)
                 _context.Entry(ticket).Reference(r => r.Event).Load();
-            
             return _mapper.Map<List<dbo.Ticket>>(result);
         }
     }
