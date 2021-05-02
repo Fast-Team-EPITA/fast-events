@@ -13,9 +13,9 @@
             </button>
             <form class="dropdown-menu" aria-labelledby="dropdownMenuButton" method="post">
                 <button class="dropdown-item" asp-action="Index">All</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.Concert">Concert</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.Conference">Conference</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.OpenAir">Open Air</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.Concert" asp-route-pageNumber="@Model.PageNumber">Concert</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.Conference" asp-route-pageNumber="@Model.PageNumber">Conference</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.OpenAir" asp-route-pageNumber="@Model.PageNumber">Open Air</button>
             </form>
         </div>
 
@@ -23,10 +23,10 @@
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Sort
             </button>
-            <form class="dropdown-menu" aria-labelledby="dropdownMenuButton" method="post">
-                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Name">Name</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Organizer">Organizer</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Date">Date</button>
+           <form class="dropdown-menu" aria-labelledby="dropdownMenuButton" method="post">
+                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Name" asp-route-pageNumber="@Model.PageNumber">Name</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Organizer" asp-route-pageNumber="@Model.PageNumber">Organizer</button>
+                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Date" asp-route-pageNumber="@Model.PageNumber">Date</button>
             </form>
         </div>
 
@@ -38,16 +38,16 @@
             </label>
         </form>
 
-        <form class="form-inline my-2 my-lg-0" method="post" asp-controller="Home" asp-action="Index">
+        <form class="form-inline my-2 my-lg-0" method="post" asp-controller="Home" asp-action="Index" asp-route-pageNumber="@Model.PageNumber">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" name="searchPattern" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form> 
+        </form>
 
-            <form method="post" class="m-4">
-                <button class="btn btn-outline-success mr-2 my-2 my-sm-0" asp-action="Tickets">My tickets</button>
+        <form method="post" class="m-4">
+            <button class="btn btn-outline-success mr-2 my-2 my-sm-0" asp-action="Tickets">My tickets</button>
 
-                <button class="btn btn-outline-success ml-2 my-2 my-sm-0" asp-action="CreateOrEdit">Create an event</button>
-            </form>
+            <button class="btn btn-outline-success ml-2 my-2 my-sm-0" asp-action="CreateOrEdit">Create an event</button>
+        </form>
     </nav>
 
     @if (Model.EventUis.Count == 0)
@@ -59,9 +59,9 @@
             <div class="card-body text-center">
                 Change the filters to see other events.
             </div>
-        </div>    
+        </div>
     }
-    
+
     @foreach (var ev in Model.EventUis)
     {
         <form method="post" class="m-4 d-flex text-center">
@@ -108,7 +108,18 @@
                     </div>
                 </div>
             </button>
-            
+
         </form>
-     }
+    }
+
+    @{ 
+        var prevDisabled = Model.PageNumber == 0 ? "disabled" : "";
+        var nextDisabled = Model.EventUis.Count < 10 ? "disabled" : "";
+    }
+
+    <div class="d-flex justify-content-center align-items-center">
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" class="btn btn-dark @prevDisabled m-2">Previous</a>
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" class="btn btn-dark @nextDisabled m-2">Next</a>
+    </div>
+    
 </div>

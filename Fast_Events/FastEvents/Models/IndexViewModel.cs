@@ -10,9 +10,12 @@ namespace FastEvents.Models
     {
         public List<EventUi> EventUis { get; set; }
 
-        public IndexViewModel(List<EventUi> eventUis)
+        public int PageNumber { get; set; }
+
+        public IndexViewModel(List<EventUi> eventUis, int pageNumber)
         {
             EventUis = eventUis;
+            PageNumber = pageNumber;
         }
 
     }

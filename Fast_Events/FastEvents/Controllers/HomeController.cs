@@ -66,10 +66,12 @@ namespace FastEvents.Controllers
         /**
          *  View Navigation
          */
-        public async Task<IActionResult> Index(Category? sortCategory = null, string sortType = null, bool ownedEvents = false, string searchPattern = null)
+        public async Task<IActionResult> Index(Category? sortCategory = null, string sortType = null, bool ownedEvents = false, string searchPattern = null, int pageNumber = 0)
         {
             GetUserIdFromCookies();
             var events = (await _eventUiRepository.Get()).ToList();
+            
+
             if (sortCategory != null)
                 events = SortByCategory(sortCategory, events);
 
@@ -82,7 +84,11 @@ namespace FastEvents.Controllers
             if (searchPattern != null)
                 events = SortSearchPattern(searchPattern, events);
 
-            var model = new IndexViewModel(events);
+
+            var eventsToDisplay = events.Skip(pageNumber * 10).Take(10).ToList();
+
+
+            var model = new IndexViewModel(eventsToDisplay, pageNumber);
             return View(model);
         }
 
