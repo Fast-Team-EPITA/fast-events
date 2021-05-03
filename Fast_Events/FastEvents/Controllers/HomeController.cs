@@ -147,8 +147,7 @@ namespace FastEvents.Controllers
         [HttpPost]
         public async Task<IActionResult> CancelEvent(long eventId)
         {
-            // TODO It seems that it doesnt get the changes on the redirection
-            await _eventRepository.Delete(eventId);
+            var test = await _eventRepository.DeleteAlongWithReferences(eventId);
             return RedirectToAction("Index");
         }
 
