@@ -6,13 +6,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using FastEvents.DataAccess;
-using FastEvents.DataAccess.EfModels;
 using FastEvents.DataAccess.Interfaces;
 using FastEvents.dbo;
 using FastEvents.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using QRCoder;
 using Event = FastEvents.dbo.Event;
 using Stat = FastEvents.dbo.Stat;
@@ -178,13 +174,12 @@ namespace FastEvents.Controllers
             if (viewModel.PictureFile != null)
                 await using (var stream = System.IO.File.Create(Path.Join(ImagesPath, fileName)))
                     await viewModel.PictureFile.CopyToAsync(stream);
-            
 
             GetUserIdFromCookies();
             var insertedEvent = viewModel.IsCreate
                 ? await _eventRepository.Insert(new Event(viewModel.EventUi) {OwnerUuid = _userId, PictureFilename = fileName})
                 : await _eventRepository.Update(new Event(viewModel.EventUi) {OwnerUuid = _userId, PictureFilename = fileName});
-
+           
             return RedirectToAction("Detail", viewModel.EventUi.Id);
         }
 
