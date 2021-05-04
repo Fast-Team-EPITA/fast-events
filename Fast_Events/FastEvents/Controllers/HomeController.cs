@@ -16,6 +16,8 @@ using Ticket = FastEvents.dbo.Ticket;
 
 // TODO Remove event if finished
 // TODO Tests unitaires
+// TODO Add page number in index
+// TODO Ajouter des logs
 
 namespace FastEvents.Controllers
 {
@@ -135,6 +137,12 @@ namespace FastEvents.Controllers
         {
             return View();
         }
+        
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
+        }
 
 
         /**
@@ -143,7 +151,7 @@ namespace FastEvents.Controllers
         [HttpPost]
         public async Task<IActionResult> CancelEvent(long eventId)
         {
-            var test = await _eventRepository.DeleteAlongWithReferences(eventId);
+            await _eventRepository.DeleteAlongWithReferences(eventId);
             return RedirectToAction("Index");
         }
 
@@ -219,7 +227,6 @@ namespace FastEvents.Controllers
         /**
          *  QR Code Management
          */
-
         private string GenerateQrCode()
         {
             var uuid = Guid.NewGuid().ToString();
@@ -234,16 +241,6 @@ namespace FastEvents.Controllers
         {
             byte[] fileBytes = System.IO.File.ReadAllBytes(Path.Join(QrCodesPath, qrCodeFilename));
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, qrCodeFilename);
-        }
-
-
-        /**
-         *  Error
-         */
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
     }
 }
