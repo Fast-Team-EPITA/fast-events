@@ -195,12 +195,12 @@ namespace FastEvents.Controllers
         /**
          *  Sorting
          */
-        private static List<EventUi> SortByCategory(Category? category, List<EventUi> events)
+        public List<EventUi> SortByCategory(Category? category, List<EventUi> events)
         {
             return events.Where((ev) => ev.Category == category).ToList();
         }
 
-        private static List<EventUi> SortByType(string type, List<EventUi> events)
+        public List<EventUi> SortByType(string type, List<EventUi> events)
         {
             return type switch
             {
@@ -211,12 +211,12 @@ namespace FastEvents.Controllers
             };
         }
 
-        private List<EventUi> SortOwnedEvents(List<EventUi> events)
+        public List<EventUi> SortOwnedEvents(List<EventUi> events)
         {
             return events.Where((ev) => ev.OwnerUuid == _userId).ToList();
         }
 
-        private static List<EventUi> SortSearchPattern(string searchPattern, List<EventUi> events)
+        public List<EventUi> SortSearchPattern(string searchPattern, List<EventUi> events)
         {
             return events.Where(ev =>
                 ev.Name.ToLower().Contains(searchPattern.ToLower()) ||

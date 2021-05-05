@@ -30,9 +30,9 @@
             </form>
         </div>
 
-        <form class="form-check m-2" method="post">
+        <form class="form-check m-2" asp-action="Index" asp-route-ownedEvents="true" method="post">
             @*// Trouver comment faire un "oncheck" sur la checkbox pour appeler l'action Index*@
-            <input class="form-check-input" type="checkbox" value="" asp-action="Index" id="flexCheckDefault">
+            <input class="form-check-input" type="checkbox" value="" onclick="this.form.submit()"  id="flexCheckDefault">
             <label class="form-check-label" for="flexCheckDefault">
                 Owned events
             </label>
