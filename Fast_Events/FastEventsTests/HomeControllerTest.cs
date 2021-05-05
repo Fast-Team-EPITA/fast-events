@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
@@ -74,10 +75,13 @@ namespace FastEventsTests
         public async Task DetailTest(long id)
         {
             InitController();
-            statRepoMock.Setup(t => t.Insert(It.IsAny<Stat>()))
-                .Callback<Stat>(t => Assert.Equal(id, t.EventId));
+            statRepoMock.Setup(s => s.Insert(It.IsAny<Stat>()))
+                .Callback<Stat>(s => Assert.Equal(id, s.EventId));
+            eventUiRepoMock.Setup(e => e.GetById(It.IsAny<long>())).Returns(new EventUi());
+            ticketRepoMock.Setup(t => t.GetByOwnerId(It.IsAny<string>())).Returns(new List<Ticket>());
+            
             var action = await sut.Detail(id);
-            statRepoMock.Verify(t => t.Insert(It.IsAny<Stat>()), Times.Once);
+            statRepoMock.Verify(s => s.Insert(It.IsAny<Stat>()), Times.Once);
             // Might need to test viewmodel but how ?
         }
     }
