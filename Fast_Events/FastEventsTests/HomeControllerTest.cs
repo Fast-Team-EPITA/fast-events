@@ -66,6 +66,7 @@ namespace FastEventsTests
                 .Callback<Ticket>(t => Assert.Equal(id, t.EventId));
             await sut.GenerateAndDownloadQrCode(id);
             ticketRepoMock.Verify(t => t.Insert(It.IsAny<Ticket>()), Times.Once);
+            RemoveTempFiles();
         }
 
         [Theory]
@@ -82,6 +83,7 @@ namespace FastEventsTests
             
             var action = await sut.Detail(id);
             statRepoMock.Verify(s => s.Insert(It.IsAny<Stat>()), Times.Once);
+            RemoveTempFiles();
             // Might need to test viewmodel but how ?
         }
     }
