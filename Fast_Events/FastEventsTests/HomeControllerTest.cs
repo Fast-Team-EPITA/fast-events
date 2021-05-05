@@ -2,9 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Castle.Core.Logging;
 using FastEvents.Controllers;
-using FastEvents.DataAccess;
 using FastEvents.dbo;
 using FastEvents.DataAccess.Interfaces;
 using Microsoft.Extensions.Logging;
@@ -52,14 +50,11 @@ namespace FastEventsTests
         {
             public override IEnumerator<object[]> GetEnumerator()
             {
-                EventUi event1 = new();
-                event1.Category = Category.Concert;
+                var event1 = new EventUi { Category = Category.Concert };
 
-                EventUi event2 = new();
-                event2.Category = Category.Conference;
+                var event2 = new EventUi { Category = Category.Conference };
 
-                EventUi event3 = new();
-                event3.Category = Category.OpenAir;
+                var event3 = new EventUi { Category = Category.OpenAir };
 
                 yield return new object[] { Category.Concert, new List<EventUi> { event1, event2, event3 } };
                 yield return new object[] { Category.Conference, new List<EventUi> { event1, event2, event3 } };
@@ -71,20 +66,20 @@ namespace FastEventsTests
         {
             public override IEnumerator<object[]> GetEnumerator()
             {
-                EventUi event1 = new();
-                event1.Name = "A";
-                event1.Organizer = "A organizer";
-                event1.StartDate = DateTime.Now;
+                var event1 = new EventUi
+                {
+                    Name = "A", Organizer = "A organizer", StartDate = DateTime.Now
+                };
 
-                EventUi event2 = new();
-                event2.Name = "B";
-                event2.Organizer = "B organizer";
-                event2.StartDate = DateTime.Now.AddDays(1);
+                var event2 = new EventUi
+                {
+                    Name = "B", Organizer = "B organizer", StartDate = DateTime.Now.AddDays(1)
+                };
 
-                EventUi event3 = new();
-                event3.Name = "C";
-                event3.Organizer = "C organizer";
-                event3.StartDate = DateTime.Now.AddDays(2);
+                var event3 = new EventUi
+                {
+                    Name = "C", Organizer = "C organizer", StartDate = DateTime.Now.AddDays(2)
+                };
 
                 yield return new object[] { "Name" , new List<EventUi> { event3, event2, event1 } };
                 yield return new object[] { "Organizer" , new List<EventUi> { event3, event2, event1 } };
@@ -97,17 +92,11 @@ namespace FastEventsTests
         {
             public override IEnumerator<object[]> GetEnumerator()
             {
-                EventUi event1 = new();
-                event1.Name = "A";
-                event1.OwnerUuid = "1";
+                var event1 = new EventUi { Name = "A", OwnerUuid = "1" };
 
-                EventUi event2 = new();
-                event2.Name = "B";
-                event2.OwnerUuid = "2";
+                var event2 = new EventUi { Name = "B", OwnerUuid = "2" };
 
-                EventUi event3 = new();
-                event3.Name = "C";
-                event3.OwnerUuid = "1";
+                var event3 = new EventUi { Name = "C", OwnerUuid = "1" };
 
                 yield return new object[] { new List<EventUi> { event1, event2, event3 } };
                 yield return new object[] { new List<EventUi> { event1, event2, event3, event1 } };
@@ -121,20 +110,20 @@ namespace FastEventsTests
         {
             public override IEnumerator<object[]> GetEnumerator()
             {
-                EventUi event1 = new();
-                event1.Name = "A";
-                event1.Organizer = "C organizer";
-                event1.StartDate = DateTime.Now;
+                var event1 = new EventUi
+                {
+                    Name = "A", Organizer = "C organizer", StartDate = DateTime.Now
+                };
 
-                EventUi event2 = new();
-                event2.Name = "B";
-                event2.Organizer = "D organizer";
-                event2.StartDate = DateTime.Now.AddDays(1);
+                var event2 = new EventUi
+                {
+                    Name = "B", Organizer = "D organizer", StartDate = DateTime.Now.AddDays(1)
+                };
 
-                EventUi event3 = new();
-                event3.Name = "C";
-                event3.Organizer = "E organizer";
-                event3.StartDate = DateTime.Now.AddDays(2);
+                var event3 = new EventUi
+                {
+                    Name = "C", Organizer = "E organizer", StartDate = DateTime.Now.AddDays(2)
+                };
 
                 yield return new object[] { "A", new List<EventUi> { event1, event2, event3 }, 3 };
                 yield return new object[] { "B", new List<EventUi> { event1, event2, event3 }, 1 };
@@ -146,19 +135,21 @@ namespace FastEventsTests
         {
             public override IEnumerator<object[]> GetEnumerator()
             {
-                EventUi event1 = new();
-                event1.Id = 1;
-                event1.Name = "Fast Event";
-                event1.Organizer = "me";
-                event1.StartDate = DateTime.Today;
-                event1.EndDate = DateTime.Today.AddDays(1);
-                event1.Capacity = 100;
-                event1.Location = "here";
-                event1.Description = "description";
-                event1.PictureFilename = "none";
-                event1.OwnerUuid = "1";
-                event1.Category = Category.Concert;
-                event1.NumberTickets = 0;
+                var event1 = new EventUi
+                {
+                    Id = 1,
+                    Name = "Fast Event",
+                    Organizer = "me",
+                    StartDate = DateTime.Today,
+                    EndDate = DateTime.Today.AddDays(1),
+                    Capacity = 100,
+                    Location = "here",
+                    Description = "description",
+                    PictureFilename = "none",
+                    OwnerUuid = "1",
+                    Category = Category.Concert,
+                    NumberTickets = 0
+                };
 
                 yield return new object[] { new CreateOrEditViewModel { EventUi = event1, IsCreate = true } };
             }
