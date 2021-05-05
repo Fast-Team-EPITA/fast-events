@@ -10,6 +10,7 @@ using Moq;
 using Xunit;
 using FastEvents.Models;
 using System;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FastEventsTests
 {
@@ -37,14 +38,18 @@ namespace FastEventsTests
 
         private void RemoveTempFiles()
         {
-            var di = new DirectoryInfo(".");
-            var files = di.GetFiles("*.jpg").Where(p => p.Extension == ".jpg").ToArray();
+            var directory = new DirectoryInfo(".");
+            var files = directory.GetFiles("*.jpg").Where(p => p.Extension == ".jpg").ToArray();
             foreach (var file in files)
             {
                 file.Attributes = FileAttributes.Normal;
                 File.Delete(file.FullName);
             }
         }
+        
+        /**
+         *  ClassData
+         */
 
         private class SortEventsCategoryClassData : BaseClassData
         {
@@ -92,11 +97,11 @@ namespace FastEventsTests
         {
             public override IEnumerator<object[]> GetEnumerator()
             {
-                var event1 = new EventUi { Name = "A", OwnerUuid = "1" };
+                var event1 = new EventUi { Name = "A", OwnerUuid = null };
 
                 var event2 = new EventUi { Name = "B", OwnerUuid = "2" };
 
-                var event3 = new EventUi { Name = "C", OwnerUuid = "1" };
+                var event3 = new EventUi { Name = "C", OwnerUuid = null };
 
                 yield return new object[] { new List<EventUi> { event1, event2, event3 } };
                 yield return new object[] { new List<EventUi> { event1, event2, event3, event1 } };
@@ -154,6 +159,10 @@ namespace FastEventsTests
                 yield return new object[] { new CreateOrEditViewModel { EventUi = event1, IsCreate = true } };
             }
         }
+        
+        /**
+         *  Actions
+         */
 
         [Fact]
         public void GenerateQrCodeTest()
@@ -182,18 +191,24 @@ namespace FastEventsTests
         [InlineData(1)]
         [InlineData(5435)]
         [InlineData(5769203)]
-        public async Task DetailTest(long id)
+        public async Task CancelEventTest(long id)
         {
             InitController();
-            statRepoMock.Setup(s => s.Insert(It.IsAny<Stat>()))
-                .Callback<Stat>(s => Assert.Equal(id, s.EventId));
-            eventUiRepoMock.Setup(e => e.GetById(It.IsAny<long>())).Returns(new EventUi());
-            ticketRepoMock.Setup(t => t.GetByOwnerId(It.IsAny<string>())).Returns(new List<Ticket>());
-            
-            var action = await sut.Detail(id);
-            statRepoMock.Verify(s => s.Insert(It.IsAny<Stat>()), Times.Once);
-            RemoveTempFiles();
-            // Might need to test viewmodel but how ?
+            eventRepoMock.Setup(e => e.DeleteAlongWithReferences(It.IsAny<long>()));
+            await sut.CancelEvent(id);
+            eventRepoMock.Verify(e => e.DeleteAlongWithReferences(It.IsAny<long>()), Times.Once);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(5435)]
+        [InlineData(5769203)]
+        public async Task CancelReservationTest(long id)
+        {
+            InitController();
+            ticketRepoMock.Setup(t => t.Delete(It.IsAny<long>()));
+            await sut.CancelReservation(id);
+            ticketRepoMock.Verify(t => t.Delete(It.IsAny<long>()), Times.Once);
         }
 
         [Theory]
@@ -204,6 +219,62 @@ namespace FastEventsTests
             var action = await sut.SaveEvent(viewModel);
             eventRepoMock.Verify(s => s.Insert(It.IsAny<Event>()), Times.Once);
         }
+        
+        /**
+         *  Views
+         */
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(5435)]
+        [InlineData(5769203)]
+        public async Task DetailTest(long id)
+        {
+            InitController();
+            statRepoMock.Setup(s => s.Insert(It.IsAny<Stat>()))
+                .Callback<Stat>(s => Assert.Equal(id, s.EventId));
+            eventUiRepoMock.Setup(e => e.GetById(It.IsAny<long>())).Returns(new EventUi());
+            ticketRepoMock.Setup(t => t.GetByOwnerId(It.IsAny<string>())).Returns(new List<Ticket>());
+            
+            var action = await sut.Detail(id);
+            var viewResult = Assert.IsType<ViewResult>(action);
+            var model = Assert.IsType<DetailViewModel>(viewResult.ViewData.Model);
+            
+            Assert.NotNull(model.EventUi);
+            statRepoMock.Verify(s => s.Insert(It.IsAny<Stat>()), Times.Once);
+            RemoveTempFiles();
+        }
+
+        [Fact]
+        public void TicketsTest()
+        {
+            InitController();
+            ticketRepoMock.Setup(t => t.GetByOwnerId(It.IsAny<string>())).Returns(new List<Ticket>());
+
+            var action = sut.Tickets();
+            var viewResult = Assert.IsType<ViewResult>(action);
+            var model = Assert.IsType<TicketsViewModel>(viewResult.ViewData.Model);
+            
+            Assert.NotNull(model);
+            ticketRepoMock.Verify(t => t.Insert(It.IsAny<Ticket>()), Times.Once);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(5435)]
+        [InlineData(5769203)]
+        public void StatTest(long id)
+        {
+            InitController();
+            statRepoMock.Setup(s => s.GetByEvent(It.IsAny<long>())).Returns(new StatByEvent());
+
+            var action = sut.Stat(id);
+            Assert.IsType<JsonResult>(action);
+        }
+
+        /**
+         *  Sort
+         */
 
         [Theory]
         [ClassData(typeof(SortEventsCategoryClassData))]
@@ -225,7 +296,7 @@ namespace FastEventsTests
             Assert.Equal(events, result);
         }
 
-        /*[Theory]
+        [Theory]
         [ClassData(typeof(SortEventsOwnedClassData))]
         public void SortOwnedEvents(List<EventUi> events)
         {
@@ -233,7 +304,7 @@ namespace FastEventsTests
             // How to get user_id;
             var result = sut.SortOwnedEvents(events);
             Assert.Equal(2, result.Count);
-        }*/
+        }
 
         [Theory]
         [ClassData(typeof(SortEventsSearchClassData))]

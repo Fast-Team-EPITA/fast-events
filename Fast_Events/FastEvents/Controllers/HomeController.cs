@@ -15,9 +15,10 @@ using Stat = FastEvents.dbo.Stat;
 using Ticket = FastEvents.dbo.Ticket;
 
 // TODO Remove event if finished
-// TODO Tests unitaires
+// TODO Tests unitaires Repo
 // TODO Add page number in index
 // TODO Ajouter des logs
+// TODO Deploy
 
 namespace FastEvents.Controllers
 {
