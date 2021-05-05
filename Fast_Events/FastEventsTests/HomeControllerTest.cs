@@ -10,6 +10,8 @@ using FastEvents.DataAccess.Interfaces;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
+using FastEvents.Models;
+using System;
 
 namespace FastEventsTests
 {
@@ -45,7 +47,123 @@ namespace FastEventsTests
                 File.Delete(file.FullName);
             }
         }
+
+        private class SortEventsCategoryClassData : BaseClassData
+        {
+            public override IEnumerator<object[]> GetEnumerator()
+            {
+                EventUi event1 = new();
+                event1.Category = Category.Concert;
+
+                EventUi event2 = new();
+                event2.Category = Category.Conference;
+
+                EventUi event3 = new();
+                event3.Category = Category.OpenAir;
+
+                yield return new object[] { Category.Concert, new List<EventUi> { event1, event2, event3 } };
+                yield return new object[] { Category.Conference, new List<EventUi> { event1, event2, event3 } };
+                yield return new object[] { Category.OpenAir, new List<EventUi> { event1, event2, event3 } };
+            }
+        }
+
+        private class SortEventsTypeClassData : BaseClassData
+        {
+            public override IEnumerator<object[]> GetEnumerator()
+            {
+                EventUi event1 = new();
+                event1.Name = "A";
+                event1.Organizer = "A organizer";
+                event1.StartDate = DateTime.Now;
+
+                EventUi event2 = new();
+                event2.Name = "B";
+                event2.Organizer = "B organizer";
+                event2.StartDate = DateTime.Now.AddDays(1);
+
+                EventUi event3 = new();
+                event3.Name = "C";
+                event3.Organizer = "C organizer";
+                event3.StartDate = DateTime.Now.AddDays(2);
+
+                yield return new object[] { "Name" , new List<EventUi> { event3, event2, event1 } };
+                yield return new object[] { "Organizer" , new List<EventUi> { event3, event2, event1 } };
+                yield return new object[] { "Date" , new List<EventUi> { event3, event2, event1 } };
+            }
+        }
+
+
+        private class SortEventsOwnedClassData : BaseClassData
+        {
+            public override IEnumerator<object[]> GetEnumerator()
+            {
+                EventUi event1 = new();
+                event1.Name = "A";
+                event1.OwnerUuid = "1";
+
+                EventUi event2 = new();
+                event2.Name = "B";
+                event2.OwnerUuid = "2";
+
+                EventUi event3 = new();
+                event3.Name = "C";
+                event3.OwnerUuid = "1";
+
+                yield return new object[] { new List<EventUi> { event1, event2, event3 } };
+                yield return new object[] { new List<EventUi> { event1, event2, event3, event1 } };
+                yield return new object[] { new List<EventUi> { event1, event2, event3, event1, event3 } };
+            }
+        }
+
         
+
+        private class SortEventsSearchClassData : BaseClassData
+        {
+            public override IEnumerator<object[]> GetEnumerator()
+            {
+                EventUi event1 = new();
+                event1.Name = "A";
+                event1.Organizer = "C organizer";
+                event1.StartDate = DateTime.Now;
+
+                EventUi event2 = new();
+                event2.Name = "B";
+                event2.Organizer = "D organizer";
+                event2.StartDate = DateTime.Now.AddDays(1);
+
+                EventUi event3 = new();
+                event3.Name = "C";
+                event3.Organizer = "E organizer";
+                event3.StartDate = DateTime.Now.AddDays(2);
+
+                yield return new object[] { "A", new List<EventUi> { event1, event2, event3 }, 3 };
+                yield return new object[] { "B", new List<EventUi> { event1, event2, event3 }, 1 };
+                yield return new object[] { "C", new List<EventUi> { event1, event2, event3 }, 2 };
+            }
+        }
+
+        private class SaveEventsClassData : BaseClassData
+        {
+            public override IEnumerator<object[]> GetEnumerator()
+            {
+                EventUi event1 = new();
+                event1.Id = 1;
+                event1.Name = "Fast Event";
+                event1.Organizer = "me";
+                event1.StartDate = DateTime.Today;
+                event1.EndDate = DateTime.Today.AddDays(1);
+                event1.Capacity = 100;
+                event1.Location = "here";
+                event1.Description = "description";
+                event1.PictureFilename = "none";
+                event1.OwnerUuid = "1";
+                event1.Category = Category.Concert;
+                event1.NumberTickets = 0;
+
+                yield return new object[] { new CreateOrEditViewModel { EventUi = event1, IsCreate = true } };
+            }
+        }
+
         [Fact]
         public void GenerateQrCodeTest()
         {
@@ -85,6 +203,54 @@ namespace FastEventsTests
             statRepoMock.Verify(s => s.Insert(It.IsAny<Stat>()), Times.Once);
             RemoveTempFiles();
             // Might need to test viewmodel but how ?
+        }
+
+        [Theory]
+        [ClassData(typeof(SaveEventsClassData))]
+        public async Task SaveEventTest(CreateOrEditViewModel viewModel)
+        {
+            InitController();
+            var action = await sut.SaveEvent(viewModel);
+            eventRepoMock.Verify(s => s.Insert(It.IsAny<Event>()), Times.Once);
+        }
+
+        [Theory]
+        [ClassData(typeof(SortEventsCategoryClassData))]
+        public void SortByCategoryTest(Category? category, List<EventUi> events)
+        {     
+            InitController();
+            var results = sut.SortByCategory(category, events);
+            Assert.Single(results);
+            Assert.Equal(category, results[0].Category);
+        }
+
+        [Theory]
+        [ClassData(typeof(SortEventsTypeClassData))]
+        public void SortByTypeTest(string type, List<EventUi> events)
+        {
+            InitController();
+            var result = sut.SortByType(type, events);
+            events.Reverse();
+            Assert.Equal(events, result);
+        }
+
+        /*[Theory]
+        [ClassData(typeof(SortEventsOwnedClassData))]
+        public void SortOwnedEvents(List<EventUi> events)
+        {
+            InitController();
+            // How to get user_id;
+            var result = sut.SortOwnedEvents(events);
+            Assert.Equal(2, result.Count);
+        }*/
+
+        [Theory]
+        [ClassData(typeof(SortEventsSearchClassData))]
+        public void SortSearchPattern(string searchPattern, List<EventUi> events, int count)
+        {
+            InitController();
+            var result = sut.SortSearchPattern(searchPattern, events);
+            Assert.Equal(count, result.Count);
         }
     }
 }
