@@ -32,9 +32,9 @@ namespace FastEvents.Controllers
 
         private string _userId;
 
-        private static readonly string QrCodesPath =
+        public string QrCodesPath =
             Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "QRCodes");
-        private static readonly string ImagesPath =
+        public string ImagesPath =
             Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "Images");
 
         public HomeController(ILogger<HomeController> logger, IEventUiRepository eventUiRepository,
@@ -54,6 +54,9 @@ namespace FastEvents.Controllers
          */
         private void GetUserIdFromCookies()
         {
+            if (HttpContext?.Request.Cookies == null)
+                return;
+            
             var (key, value) = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "userId");
             if (key == null)
             {
@@ -95,10 +98,10 @@ namespace FastEvents.Controllers
         }
 
         [Route("detail/{eventId:long}")]
-        public async Task<IActionResult> Detail(long eventId, string fileToDownload = null)
+        public async Task<IActionResult> Detail(long eventId)
         {
             GetUserIdFromCookies();
-            var stat = new Stat {Date = DateTime.Now, EventId = eventId};
+            var stat = new Stat { Date = DateTime.Now, EventId = eventId };
             await _statRepository.Insert(stat);
 
             var selectedEvent = _eventUiRepository.GetById(eventId);
@@ -141,7 +144,7 @@ namespace FastEvents.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
 
@@ -227,7 +230,7 @@ namespace FastEvents.Controllers
         /**
          *  QR Code Management
          */
-        private string GenerateQrCode()
+        public string GenerateQrCode()
         {
             var uuid = Guid.NewGuid().ToString();
             var qrCodeData = _qrCodeGenerator.CreateQrCode(uuid, QRCodeGenerator.ECCLevel.Q);
