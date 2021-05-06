@@ -128,7 +128,7 @@ namespace FastEventsTests
             var mapperMock = new Mock<IMapper>();
             
             contextMock.Setup(c => c.Tickets).Returns(setMock);
-            mapperMock.Setup(m => m.Map<FastEvents.dbo.Ticket>(It.IsAny<List<Ticket>>()))
+            mapperMock.Setup(m => m.Map<List<Ticket>, FastEvents.dbo.Ticket>(It.IsAny<List<Ticket>>()))
                 .Callback<List<Ticket>>(l => Assert.Equal(expected, l?.Count ?? 0));
             
             var sut = new TicketRepository(contextMock.Object, loggerMock.Object, mapperMock.Object);
