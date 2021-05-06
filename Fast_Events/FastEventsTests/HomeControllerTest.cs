@@ -103,9 +103,9 @@ namespace FastEventsTests
 
                 var event3 = new EventUi { Name = "C", OwnerUuid = null };
 
-                yield return new object[] { new List<EventUi> { event1, event2, event3 } };
-                yield return new object[] { new List<EventUi> { event1, event2, event3, event1 } };
-                yield return new object[] { new List<EventUi> { event1, event2, event3, event1, event3 } };
+                yield return new object[] { new List<EventUi> { event1, event2, event3 }, 2 };
+                yield return new object[] { new List<EventUi> { event1, event2, event3, event1 }, 3 };
+                yield return new object[] { new List<EventUi> { event1, event2, event3, event1, event3 }, 4 };
             }
         }
 
@@ -272,6 +272,32 @@ namespace FastEventsTests
             Assert.IsType<JsonResult>(action);
         }
 
+        [Theory]
+        [InlineData(0)]
+        [InlineData(5435)]
+        public void CreateOrEditTest(long id)
+        {
+            InitController();
+            var action = id == 0 ? sut.CreateOrEdit() : sut.CreateOrEdit(id);
+            var viewResult = Assert.IsType<ViewResult>(action);
+            var model = Assert.IsType<CreateOrEditViewModel>(viewResult.ViewData.Model);
+
+            Assert.NotNull(model);
+            var result = id == 0 ? true : false;
+            Assert.Equal(result, model.IsCreate);
+        }
+
+        /*[Fact]
+        public void IndexTest()
+        {
+            InitController();
+            eventUiRepoMock.Setup(s => s.Get("")).Returns(new List<EventUi>());
+            var action = sut.Index();
+            var viewResult = Assert.IsType<ViewResult>(action);
+            var model = Assert.IsType<IndexViewModel>(viewResult.ViewData.Model);
+            Assert.NotNull(model);
+        }*/
+
         /**
          *  Sort
          */
@@ -298,12 +324,11 @@ namespace FastEventsTests
 
         [Theory]
         [ClassData(typeof(SortEventsOwnedClassData))]
-        public void SortOwnedEvents(List<EventUi> events)
+        public void SortOwnedEvents(List<EventUi> events, int count)
         {
             InitController();
-            // How to get user_id;
             var result = sut.SortOwnedEvents(events);
-            Assert.Equal(2, result.Count);
+            Assert.Equal(count, result.Count);
         }
 
         [Theory]
