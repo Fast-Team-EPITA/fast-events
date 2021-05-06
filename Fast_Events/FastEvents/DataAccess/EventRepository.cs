@@ -9,7 +9,7 @@ namespace FastEvents.DataAccess
 {
     public class EventRepository: Repository<DataAccess.EfModels.Event, Event>, Interfaces.IEventRepository
     {
-        public EventRepository(FastEventContext context, ILogger<EventUiRepository> logger, IMapper mapper) : base(context, logger, mapper)
+        public EventRepository(FastEventContext context, ILogger<EventRepository> logger, IMapper mapper) : base(context, logger, mapper)
         {
         }
 
