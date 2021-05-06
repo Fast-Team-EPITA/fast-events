@@ -52,7 +52,7 @@ namespace FastEventsTests
                 {
                     new () { Category = "Concert", Description="" },
                     new () { Category = "Conference", Description=""},
-                    new () { Category = "OpenAir", Description=""},
+                    new () { Category = "Charity", Description=""},
 
                 };
 
@@ -60,7 +60,7 @@ namespace FastEventsTests
                 {
                     new () { Category = "Concert", Description=""},
                     new () { Category = "Conference", Description=""},
-                    new () { Category = "OpenAir", Description=""},
+                    new () { Category = "Charity", Description=""},
                     new () { Category = "Concert", Description=""},
                     new () { Category = "Concert", Description=""},
                     new () { Category = "Concert", Description=""},
@@ -68,16 +68,16 @@ namespace FastEventsTests
                 var event3 = new List<EventUi>
                 {
                     new () { Category = "Concert", Description=""},
-                    new () { Category = "OpenAir", Description=""},
+                    new () { Category = "Charity", Description=""},
                     new () { Category = "Conference", Description=""},
-                    new () { Category = "OpenAir", Description=""},
-                    new () { Category = "OpenAir", Description=""},
+                    new () { Category = "Charity", Description=""},
+                    new () { Category = "Charity", Description=""},
                    
                 };
                 var event4 = new List<EventUi>
                 {
                     new () { Category = "Concert", Description=""},
-                    new () { Category = "OpenAir", Description=""},
+                    new () { Category = "Charity", Description=""},
                     new () { Category = "Conference", Description=""},
                     new () { Category = "Conference", Description=""},
                 };
@@ -85,7 +85,7 @@ namespace FastEventsTests
 
                 yield return new object[] { event1, Category.Concert, 1};
                 yield return new object[] { event2, Category.Concert, 4};
-                yield return new object[] { event3, Category.OpenAir, 3};
+                yield return new object[] { event3, Category.Charity, 3};
                 yield return new object[] { event4, Category.Conference, 2};
             }
         }

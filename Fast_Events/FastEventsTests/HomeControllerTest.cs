@@ -59,11 +59,11 @@ namespace FastEventsTests
 
                 var event2 = new EventUi { Category = Category.Conference };
 
-                var event3 = new EventUi { Category = Category.OpenAir };
+                var event3 = new EventUi { Category = Category.Charity };
 
                 yield return new object[] { Category.Concert, new List<EventUi> { event1, event2, event3 } };
                 yield return new object[] { Category.Conference, new List<EventUi> { event1, event2, event3 } };
-                yield return new object[] { Category.OpenAir, new List<EventUi> { event1, event2, event3 } };
+                yield return new object[] { Category.Charity, new List<EventUi> { event1, event2, event3 } };
             }
         }
 

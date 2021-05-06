@@ -4,6 +4,11 @@
     {
         Concert,
         Conference,
-        OpenAir
+        OpenAir,
+        Festival,
+        Ceremony,
+        Charity,
+        Competition,
+        Exhibition
     }
 }
