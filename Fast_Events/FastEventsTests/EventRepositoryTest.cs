@@ -15,6 +15,7 @@ namespace FastEventsTests
 {
     public class EventRepositoryTest
     {
+
         /**
          * ClassData
          */
@@ -42,33 +43,33 @@ namespace FastEventsTests
                
 
                 var events1 = new List<Event>
-                {
+                    {
                     new() { Id = 1, Stats = stats, Tickets = tickets },
                     new() { Id = 2, Stats = stats, Tickets = tickets },
                     new() { Id = 3, Stats = stats, Tickets = tickets },
                     new() { Id = 4, Stats = stats, Tickets = tickets }
-                };
+                    };
                 var events2 = new List<Event>
-                {
+                    {
                     new() { Id = 1, Stats = stats, Tickets = tickets },
                     new() { Id = 2, Stats = stats, Tickets = tickets },
                     new() { Id = 3, Stats = stats, Tickets = tickets },
                     new() { Id = 4, Stats = stats, Tickets = tickets }
-                };
+                    };
                 var events3 = new List<Event>
-                {
+                    {
                     new() { Id = 1, Stats = stats, Tickets = tickets },
                     new() { Id = 2, Stats = stats, Tickets = tickets },
                     new() { Id = 3, Stats = stats, Tickets = tickets },
                     new() { Id = 4, Stats = stats, Tickets = tickets }
-                };
+                    };
                 var events4 = new List<Event>
-                {
+                    {
                     new() { Id = 1, Stats = stats, Tickets = tickets },
                     new() { Id = 2, Stats = stats, Tickets = tickets },
                     new() { Id = 3, Stats = stats, Tickets = tickets },
                     new() { Id = 4, Stats = stats, Tickets = tickets }
-                };
+                    };
 
                 yield return new object[] { events1, stats, tickets, 1, true };
                 yield return new object[] { events2, stats, tickets, 2, true };
@@ -94,5 +95,6 @@ namespace FastEventsTests
             var sut = new EventRepository(contextMock.Object, loggerMock.Object, mapperMock.Object);
             Assert.Equal(await sut.DeleteAlongWithReferences(EventId), expected);
         }
+
     }
 }

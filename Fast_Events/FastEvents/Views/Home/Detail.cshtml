@@ -4,15 +4,15 @@
 @{
     ViewData["Title"] = Model.EventUi.Name;
     var places = Model.EventUi.Capacity - Model.EventUi.NumberTickets + "/" + Model.EventUi.Capacity;
-    var imagePath = @"..\Resources\Images\" + Model.EventUi.PictureFilename;
+    var imagePath = @"..\..\Resources\Images\" + Model.EventUi.PictureFilename;
     var googleMapLink = "https://www.google.com/maps/search/?api=1&query=" + Model.EventUi.Location.Replace(" ", "+");
 }
 
-<div>
+<div class="container">
     <div class="row">
         
         <div class="col pt-4">
-            <img src="@imagePath" alt="Event Image" width="600px"/>
+            <img src="@imagePath" alt="Event Image" width="675.55px" style="max-height: 380px"/>
         </div>
 
         <div class="col">
@@ -44,11 +44,11 @@
                     </tr>
                     <tr>
                         <th>Start Date</th>
-                        <td>@Html.DisplayFor(model => model.EventUi.StartDate)</td>
+                        <td>@Model.EventUi.StartDate</td>
                     </tr>
                     <tr>
                         <th>End Date</th>
-                        <td>@Html.DisplayFor(model => model.EventUi.EndDate)</td>
+                        <td>@Model.EventUi.EndDate</td>
                     </tr>
                     @if (Model.IsOwner)
                     {
