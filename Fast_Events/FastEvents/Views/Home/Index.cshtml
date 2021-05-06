@@ -3,56 +3,50 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    var pageSize = 7;
 }
 
 <div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center" style="position: relative">
-        <div class="dropdown m-2">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Filtre
-            </button>
-            <form class="dropdown-menu" aria-labelledby="dropdownMenuButton" method="post">
-                <button class="dropdown-item" asp-action="Index">All</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.Concert" asp-route-pageNumber="@Model.PageNumber">Concert</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.Conference" asp-route-pageNumber="@Model.PageNumber">Conference</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.OpenAir" asp-route-pageNumber="@Model.PageNumber">Open Air</button>
-            </form>
-        </div>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
+        <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-center" style="position: relative">
 
-        <div class="dropdown m-2">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Sort
-            </button>
-           <form class="dropdown-menu" aria-labelledby="dropdownMenuButton" method="post">
-                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Name" asp-route-pageNumber="@Model.PageNumber">Name</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Organizer" asp-route-pageNumber="@Model.PageNumber">Organizer</button>
-                <button class="dropdown-item" asp-action="Index" asp-route-sortType="Date" asp-route-pageNumber="@Model.PageNumber">Date</button>
-            </form>
-        </div>
+            <div class="m-2 form-inline">
+                @Html.Label("Filter :", "Filter", new {@class = "control-label m-2"})
+                @Html.DropDownListFor(m => m.SortCategory,
+                    new SelectList(Enum.GetValues<Category>()),
+                    "All",
+                    new {@class = "form-control m-2", onchange = "this.form.submit();"})
+            </div>
 
-        <form class="form-check m-2" asp-action="Index" asp-route-ownedEvents="true" method="post">
-            @*// Trouver comment faire un "oncheck" sur la checkbox pour appeler l'action Index*@
-            <input class="form-check-input" type="checkbox" value="" onclick="this.form.submit()"  id="flexCheckDefault">
-            <label class="form-check-label" for="flexCheckDefault">
-                Owned events
-            </label>
-        </form>
+            <div class="form-inline m-2">
+                @Html.Label("Sort :", "Sort", new {@class = "control-label m-2"})
+                @Html.DropDownListFor(m => m.SortType,
+                    new SelectList(new List<string> {"Name", "Organizer", "Date"}),
+                    new {@class = "form-control m-2", onchange = "this.form.submit();"})
+            </div>
+            
+            <div class="form-inline m-2">
+                @Html.Label("Owned events", "Owned events", new {@class = "control-label m-2"})
+                @Html.CheckBoxFor(m => m.OwnedEvents, new { onclick = "this.form.submit()"})
+            </div>
+            
+            <div class="form-inline m-2">
+                @Html.EditorFor(m => m.SearchPattern, new { htmlAttributes = new { @class = "form-control m-2", placeholder = "Search", type = "search"}})
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </div>
 
-        <form class="form-inline my-2 my-lg-0" method="post" asp-controller="Home" asp-action="Index" asp-route-pageNumber="@Model.PageNumber">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" name="searchPattern" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-
-        <form method="post" class="m-4">
-            <button class="btn btn-outline-success mr-2 my-2 my-sm-0" asp-action="Tickets">My tickets</button>
-
-            <button class="btn btn-outline-success ml-2 my-2 my-sm-0" asp-action="CreateOrEdit">Create an event</button>
-        </form>
-    </nav>
+            <div class="m-4">
+                <button class="btn btn-outline-success mr-2 my-2 my-sm-0" asp-action="Tickets">My tickets</button>
+                <button class="btn btn-outline-success ml-2 my-2 my-sm-0" asp-action="CreateOrEdit">Create an event</button>
+            </div>
+        </nav>
+        @Html.HiddenFor(m => m.EventUis)
+    }
 
     @if (Model.EventUis.Count == 0)
     {
-        <div class="card">
+        <div class="card container">
             <div class="card-header">
                 There is no events for the specified filters.
             </div>
@@ -62,64 +56,84 @@
         </div>
     }
 
-    @foreach (var ev in Model.EventUis)
-    {
-        <form method="post" class="m-4 d-flex text-center">
-            <button class="btn btn-light flex-grow-1" asp-action="Detail" asp-route-eventId="@ev.Id">
-                <div class="mt-2 container" style="display: flex; flex-direction: row; position: relative">
-                    <div class="p-2" style="position: relative">
-                        @if (ev.Capacity - ev.NumberTickets == 0)
-                        {
-                            var urlPath = @"..\Resources\Images\" + ev.PictureFilename;
-                            <img src=@urlPath style="filter: grayscale()" alt="Event Image" width="400px" />
-                            <span style="color: red; font-size: 4rem; font-weight: bold; position: absolute; left: 32%; top: 25%">FULL</span>
-                        }
-                        else
-                        {
-                            var urlPath = @"..\Resources\Images\" + ev.PictureFilename;
-                            <img src=@urlPath alt="Event Image" width="400px" />
-                        }
-                    </div>
+    <div class="container">
+        @foreach (var ev in Model.EventUis.Skip((Model.PageNumber - 1) * pageSize).Take(pageSize))
+        {
+            <form method="post" class="m-4 d-flex text-center">
+                <button class="btn btn-light flex-grow-1" asp-action="Detail" asp-route-eventId="@ev.Id">
+                    <div class="mt-2 container" style="display: flex; flex-direction: row; position: relative">
+                        <div class="p-2" style="position: relative">
+                            @if (ev.Capacity - ev.NumberTickets == 0)
+                            {
+                                var urlPath = @"..\Resources\Images\" + ev.PictureFilename;
+                                <img src=@urlPath style="filter: grayscale(1)" alt="Event Image" width="400px" style="max-height: 225px" />
+                                <span style="color: red; font-size: 4rem; font-weight: bold; position: absolute; left: 32%; top: 25%">FULL</span>
+                            }
+                            else
+                            {
+                                var urlPath = @"..\Resources\Images\" + ev.PictureFilename;
+                                <img src=@urlPath alt="Event Image" width="400px" style="max-height: 225px"/>
+                            }
+                        </div>
 
-                    <div class="ml-5 col">
-                        <table class="table table-borderless">
-                            <tbody>
-                                <tr>
-                                    <td colspan="2" class="h2">@ev.Name</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="pt-0 h4 text-left" style="font-weight: normal">by @ev.Organizer</td>
-                                </tr>
-                                <tr>
-                                    <th class="pt-0 h4 text-left">Start date</th>
-                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.StartDate</td>
-                                </tr>
-                                <tr>
-                                    <th class="pt-0 h4 text-left">Places</th>
-                                    @{ var places = ev.Capacity - ev.NumberTickets; }
-                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@places</td>
-                                </tr>
-                                <tr>
-                                    <th class="pt-0 h4 text-left">Category</th>
-                                    <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.Category</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="ml-5 col">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2" class="h2">@ev.Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="pt-0 h4 text-left" style="font-weight: normal">by @ev.Organizer</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="pt-0 h4 text-left">Start date</th>
+                                        <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.StartDate</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="pt-0 h4 text-left">Places</th>
+                                        @{ var places = ev.Capacity - ev.NumberTickets; }
+                                        <td class="pt-0 h4 text-left" style="font-weight: normal">@places</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="pt-0 h4 text-left">Category</th>
+                                        <td class="pt-0 h4 text-left" style="font-weight: normal">@ev.Category</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </button>
+                </button>
 
-        </form>
-    }
+            </form>
+        }
+    </div>
 
     @{ 
-        var prevDisabled = Model.PageNumber == 0 ? "disabled" : "";
-        var nextDisabled = Model.EventUis.Count < 10 ? "disabled" : "";
+        var prevDisabled = Model.PageNumber == 1 ? "disabled" : "";
+        var nextDisabled = decimal.Ceiling(Model.EventUis.Count / pageSize) == Model.PageNumber - 1 ? "disabled" : "";
+        var prevPage = Model.PageNumber - 1;
+        var nextPage = Model.PageNumber + 1;
     }
+    
+    
 
     <div class="d-flex justify-content-center align-items-center">
-        <a asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" class="btn btn-dark @prevDisabled m-2">Previous</a>
-        <a asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" class="btn btn-dark @nextDisabled m-2">Next</a>
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+        {
+            <input formaction="/?page=@prevPage" @Html.Raw(prevDisabled) class="btn btn-primary btn-lg form-group" value="<" type="submit"/>
+            @for (var i = 1; i <= decimal.Ceiling(Model.EventUis.Count / pageSize) + 1; ++i)
+            {
+                <input class="btn btn-primary btn-lg form-group" value="@i" type="submit" asp-route-page="@i"/>
+            } 
+            <input formaction="/?page=@nextPage" @Html.Raw(nextDisabled) class="btn btn-primary btn-lg form-group" value=">" type="submit"/>
+            @Html.HiddenFor(m => m.SortCategory)
+            @Html.HiddenFor(m => m.SortType)
+            @Html.HiddenFor(m => m.OwnedEvents)
+            @Html.HiddenFor(m => m.SearchPattern)
+            @Html.HiddenFor(m => m.EventUis)
+        }
     </div>
+    
+    
     
 </div>
