@@ -14,10 +14,7 @@ using Event = FastEvents.dbo.Event;
 using Stat = FastEvents.dbo.Stat;
 using Ticket = FastEvents.dbo.Ticket;
 
-// TODO Remove event if finished
 // TODO Tests unitaires Repo
-// TODO Add page number in index
-// TODO Ajouter des logs
 // TODO Deploy
 
 namespace FastEvents.Controllers
@@ -35,6 +32,7 @@ namespace FastEvents.Controllers
 
         public string QrCodesPath =
             Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "QRCodes");
+
         public string ImagesPath =
             Path.Join(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "Images");
 
@@ -57,7 +55,7 @@ namespace FastEvents.Controllers
         {
             if (HttpContext?.Request.Cookies == null)
                 return;
-            
+
             var (key, value) = HttpContext.Request.Cookies.FirstOrDefault(x => x.Key == "userId");
             if (key == null)
             {
@@ -72,57 +70,61 @@ namespace FastEvents.Controllers
         /**
          *  View Navigation
          */
-        public async Task<IActionResult> Index(Category? sortCategory = null, string sortType = null, bool ownedEvents = false, string searchPattern = null, int pageNumber = 0)
+        public async Task<IActionResult> Index(IndexViewModel model, int page = 1)
         {
             GetUserIdFromCookies();
             var events = (await _eventUiRepository.Get()).ToList();
-            
 
-            if (sortCategory != null)
-                events = SortByCategory(sortCategory, events);
+            if (model.SortCategory != null)
+                events = SortByCategory(model.SortCategory, events);
 
-            if (sortType != null)
-                events = SortByType(sortType, events);
+            if (model.SortType != null)
+                events = SortByType(model.SortType, events);
 
-            if (ownedEvents)
+            if (model.OwnedEvents)
                 events = SortOwnedEvents(events);
 
-            if (searchPattern != null)
-                events = SortSearchPattern(searchPattern, events);
+            if (model.SearchPattern != null)
+                events = SortSearchPattern(model.SearchPattern, events);
 
-
-            var eventsToDisplay = events.Skip(pageNumber * 10).Take(10).ToList();
-
-
-            var model = new IndexViewModel { EventUis = eventsToDisplay, PageNumber = pageNumber };
+            model.PageNumber = page;
+            model.EventUis = events;
             return View(model);
         }
 
-        [Route("detail/{eventId:long}")]
+        [Route("Home/Detail/{eventId:long}")]
         public async Task<IActionResult> Detail(long eventId)
         {
             GetUserIdFromCookies();
-            var stat = new Stat { Date = DateTime.Now, EventId = eventId };
-            await _statRepository.Insert(stat);
 
             var selectedEvent = _eventUiRepository.GetById(eventId);
+            if (selectedEvent == null)
+                return RedirectToAction("Index");
+
             var isOwner = selectedEvent.OwnerUuid == _userId;
             var tickets = _ticketRepository.GetByOwnerId(_userId);
             var hasTicket = tickets?.FirstOrDefault(ticket => ticket.EventId == eventId) != null;
 
-            var model = new DetailViewModel { EventUi = selectedEvent, IsOwner = isOwner, HasTicket = hasTicket };
+            var stat = new Stat {Date = DateTime.Now, EventId = eventId};
+            await _statRepository.Insert(stat);
+
+            var model = new DetailViewModel {EventUi = selectedEvent, IsOwner = isOwner, HasTicket = hasTicket};
             return View(model);
         }
 
-        [Route("edit/{eventId:long?}")]
         public IActionResult CreateOrEdit(long? eventId = null)
         {
-            var eventUi = eventId.HasValue ? _eventUiRepository.GetById(eventId.Value) : new EventUi();
-            var model = new CreateOrEditViewModel { EventUi = eventUi, IsCreate = !eventId.HasValue };
+            var eventUi = eventId.HasValue
+                ? _eventUiRepository.GetById(eventId.Value)
+                : new EventUi { StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1) };
+            
+            GetUserIdFromCookies();
+            if (eventUi.OwnerUuid != null && _userId != eventUi.OwnerUuid)
+                return RedirectToAction("Index");
+            var model = new CreateOrEditViewModel {EventUi = eventUi, IsCreate = !eventId.HasValue};
             return View(model);
         }
 
-        [Route("tickets")]
         public IActionResult Tickets()
         {
             GetUserIdFromCookies();
@@ -141,58 +143,58 @@ namespace FastEvents.Controllers
         {
             return View();
         }
-        
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
 
 
         /**
          *  Button Actions
          */
-        [HttpPost]
         public async Task<IActionResult> CancelEvent(long eventId)
         {
             await _eventRepository.DeleteAlongWithReferences(eventId);
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
         public async Task<IActionResult> CancelReservation(long ticketId)
         {
             await _ticketRepository.Delete(ticketId);
             return RedirectToAction("Tickets");
         }
-        
-        [HttpPost]
+
         public async Task<IActionResult> GenerateAndDownloadQrCode(long eventId)
         {
             GetUserIdFromCookies();
             var filename = GenerateQrCode();
-            var ticket = new Ticket { EventId = eventId, OwnerUuid = _userId, QrcFilename = filename };
+            var ticket = new Ticket {EventId = eventId, OwnerUuid = _userId, QrcFilename = filename};
             await _ticketRepository.Insert(ticket);
             return DownloadQrCode(filename);
         }
 
-        [HttpPost]
         public async Task<IActionResult> SaveEvent(CreateOrEditViewModel viewModel)
         {
             if (!ModelState.IsValid)
                 return View("CreateOrEdit", viewModel);
-            
-            var fileName = viewModel.PictureFile != null ? viewModel.PictureFile.FileName : viewModel.EventUi.PictureFilename ?? "event_place_holder.jpg";
+
+            var fileName = viewModel.PictureFile != null
+                ? viewModel.PictureFile.FileName
+                : viewModel.EventUi.PictureFilename ?? "event_place_holder.jpg";
             if (viewModel.PictureFile != null)
                 await using (var stream = System.IO.File.Create(Path.Join(ImagesPath, fileName)))
                     await viewModel.PictureFile.CopyToAsync(stream);
 
             GetUserIdFromCookies();
             var insertedEvent = viewModel.IsCreate
-                ? await _eventRepository.Insert(new Event(viewModel.EventUi) {OwnerUuid = _userId, PictureFilename = fileName})
-                : await _eventRepository.Update(new Event(viewModel.EventUi) {OwnerUuid = _userId, PictureFilename = fileName});
-           
-            return RedirectToAction("Detail", viewModel.EventUi.Id);
+                ? await _eventRepository.Insert(new Event(viewModel.EventUi)
+                    {OwnerUuid = _userId, PictureFilename = fileName})
+                : await _eventRepository.Update(new Event(viewModel.EventUi)
+                    {OwnerUuid = _userId, PictureFilename = fileName});
+
+            return RedirectToAction("Detail", new {insertedEvent.Id});
         }
 
 

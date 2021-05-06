@@ -14,6 +14,5 @@ namespace FastEvents.Models
         public string SortType { get; set; }
         public bool OwnedEvents { get; set; }
         public string SearchPattern { get; set; }
-
     }
 }
