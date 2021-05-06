@@ -72,31 +72,29 @@ namespace FastEvents.Controllers
         /**
          *  View Navigation
          */
-        
-        [HttpPost]
-        public async Task<IActionResult> Index(IndexViewModel viewModel)
+        public async Task<IActionResult> Index(Category? sortCategory = null, string sortType = null, bool ownedEvents = false, string searchPattern = null, int pageNumber = 0)
         {
             GetUserIdFromCookies();
             var events = (await _eventUiRepository.Get()).ToList();
             
 
-            if (viewModel.SortCategory != null)
-                events = SortByCategory(viewModel.SortCategory, events);
+            if (sortCategory != null)
+                events = SortByCategory(sortCategory, events);
 
-            if (viewModel.SortType != null)
-                events = SortByType(viewModel.SortType, events);
+            if (sortType != null)
+                events = SortByType(sortType, events);
 
-            if (viewModel.OwnedEvents)
+            if (ownedEvents)
                 events = SortOwnedEvents(events);
 
-            if (viewModel.SearchPattern != null)
-                events = SortSearchPattern(viewModel.SearchPattern, events);
+            if (searchPattern != null)
+                events = SortSearchPattern(searchPattern, events);
 
 
-            var eventsToDisplay = events.Skip(viewModel.PageNumber * 10).Take(10).ToList();
+            var eventsToDisplay = events.Skip(pageNumber * 10).Take(10).ToList();
 
 
-            var model = new IndexViewModel { EventUis = eventsToDisplay, PageNumber = viewModel.PageNumber };
+            var model = new IndexViewModel { EventUis = eventsToDisplay, PageNumber = pageNumber };
             return View(model);
         }
 

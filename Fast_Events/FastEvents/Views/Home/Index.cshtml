@@ -19,18 +19,21 @@
             </form>
         </div>
         
-        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "" }))
         {
-            <div class="dropdown-menu">
+            <div class="dropdown m-2">
+                @Html.Label("Filter", "Filter",new { @class = "control-label"})
                 @Html.DropDownListFor(m => m.SortCategory,
                     new SelectList(Enum.GetValues<Category>()),
-                    new {@class = "form-control"})
+                    "All",
+                    new {@class = "form-control", onchange = "this.form.submit();" })
             </div>
             
-            <div class="dropdown-menu">
-                @Html.DropDownListFor(m => m.SortCategory,
-                    new SelectList(Enum.GetValues<Category>()),
-                    new {@class = "form-control"})
+            <div class="dropdown m-2">
+                @Html.Label("Sort", "Sort",new { @class = "control-label"})
+                @Html.DropDownListFor(m => m.SortType,
+                    new SelectList(new List<string> {"Name", "Organizer", "Date"}),
+                    new {@class = "form-control", onchange = "this.form.submit();" })
             </div>
             
         }
