@@ -18,6 +18,22 @@
                 <button class="dropdown-item" asp-action="Index" asp-route-sortCategory="@Category.OpenAir" asp-route-pageNumber="@Model.PageNumber">Open Air</button>
             </form>
         </div>
+        
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+        {
+            <div class="dropdown-menu">
+                @Html.DropDownListFor(m => m.SortCategory,
+                    new SelectList(Enum.GetValues<Category>()),
+                    new {@class = "form-control"})
+            </div>
+            
+            <div class="dropdown-menu">
+                @Html.DropDownListFor(m => m.SortCategory,
+                    new SelectList(Enum.GetValues<Category>()),
+                    new {@class = "form-control"})
+            </div>
+            
+        }
 
         <div class="dropdown m-2">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
