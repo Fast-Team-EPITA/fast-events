@@ -50,35 +50,36 @@ namespace FastEventsTests
             {
                 var event1 = new List<EventUi>
                 {
-                    new () { Category = "Concert"},
-                    new () { Category = "Conference"},
-                    new () { Category = "OpenAir"},
+                    new () { Category = "Concert", Description="" },
+                    new () { Category = "Conference", Description=""},
+                    new () { Category = "OpenAir", Description=""},
+
                 };
 
                 var event2 = new List<EventUi>
                 {
-                    new () { Category = "Concert"},
-                    new () { Category = "Conference"},
-                    new () { Category = "OpenAir"},
-                    new () { Category = "Concert"},
-                    new () { Category = "Concert"},
-                    new () { Category = "Concert"},
+                    new () { Category = "Concert", Description=""},
+                    new () { Category = "Conference", Description=""},
+                    new () { Category = "OpenAir", Description=""},
+                    new () { Category = "Concert", Description=""},
+                    new () { Category = "Concert", Description=""},
+                    new () { Category = "Concert", Description=""},
                 };
                 var event3 = new List<EventUi>
                 {
-                    new () { Category = "Concert"},
-                    new () { Category = "OpenAir"},
-                    new () { Category = "Conference"},
-                    new () { Category = "OpenAir"},
-                    new () { Category = "OpenAir"},
+                    new () { Category = "Concert", Description=""},
+                    new () { Category = "OpenAir", Description=""},
+                    new () { Category = "Conference", Description=""},
+                    new () { Category = "OpenAir", Description=""},
+                    new () { Category = "OpenAir", Description=""},
                    
                 };
                 var event4 = new List<EventUi>
                 {
-                    new () { Category = "Concert"},
-                    new () { Category = "OpenAir"},
-                    new () { Category = "Conference"},
-                    new () { Category = "Conference"},
+                    new () { Category = "Concert", Description=""},
+                    new () { Category = "OpenAir", Description=""},
+                    new () { Category = "Conference", Description=""},
+                    new () { Category = "Conference", Description=""},
                 };
                 
 
@@ -120,7 +121,7 @@ namespace FastEventsTests
                 
                 
                 
-                yield return new object[] { new EventUi { OwnerUuid = "test" }, "owner1", 0 };
+                yield return new object[] { new List<EventUi> { new () { OwnerUuid = "test" } }, "owner1", 0};
                 yield return new object[] { event1, "owner1", 1 };
                 yield return new object[] { event2, "owner2", 2 };
                 yield return new object[] { event3, "owner5", 0 };
@@ -163,7 +164,7 @@ namespace FastEventsTests
         }
 
         [Theory]
-        [ClassData(typeof(EventUiByCategoryClassData))]
+        [ClassData(typeof(EventUiByOwnerIdClassData))]
         public void GetByOwnerIdTest(List<EventUi> events, string ownerId, int expected)
         {
             var contextMock = new Mock<FastEventContext>();

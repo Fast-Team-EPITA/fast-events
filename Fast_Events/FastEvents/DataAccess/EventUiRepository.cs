@@ -23,14 +23,14 @@ namespace FastEvents.DataAccess
 
         public List<dbo.EventUi> GetByCategory(Category category)
         {
-            var result = _context.Events.Where(x => x.Category == category.ToString());
+            var result = _context.EventViews.Where(x => x.Category == category.ToString());
             return _mapper.Map<List<dbo.EventUi>>(result);
 
         }
 
         public List<dbo.EventUi> GetByOwnerId(string ownerId)
         {
-            var result = _context.Events.Where(x => x.OwnerUuid == ownerId);
+            var result = _context.EventViews.Where(x => x.OwnerUuid == ownerId);
             return _mapper.Map<List<dbo.EventUi>>(result);
         }
     }
