@@ -216,6 +216,9 @@ namespace FastEventsTests
         public async Task SaveEventTest(CreateOrEditViewModel viewModel)
         {
             InitController();
+            eventRepoMock.Setup(e => e.Insert(It.IsAny<Event>())).Returns(Task.FromResult(new Event()));
+            eventRepoMock.Setup(e => e.Update(It.IsAny<Event>())).Returns(Task.FromResult(new Event()));
+            
             var action = await sut.SaveEvent(viewModel);
             eventRepoMock.Verify(s => s.Insert(It.IsAny<Event>()), Times.Once);
         }
@@ -256,7 +259,7 @@ namespace FastEventsTests
             var model = Assert.IsType<TicketsViewModel>(viewResult.ViewData.Model);
             
             Assert.NotNull(model);
-            ticketRepoMock.Verify(t => t.Insert(It.IsAny<Ticket>()), Times.Once);
+            ticketRepoMock.Verify(t => t.GetByOwnerId(It.IsAny<string>()), Times.Once);
         }
 
         [Theory]
@@ -278,25 +281,26 @@ namespace FastEventsTests
         public void CreateOrEditTest(long id)
         {
             InitController();
+            eventUiRepoMock.Setup(e => e.GetById(It.IsAny<long>())).Returns(new EventUi());
+            
             var action = id == 0 ? sut.CreateOrEdit() : sut.CreateOrEdit(id);
             var viewResult = Assert.IsType<ViewResult>(action);
             var model = Assert.IsType<CreateOrEditViewModel>(viewResult.ViewData.Model);
 
             Assert.NotNull(model);
-            var result = id == 0 ? true : false;
-            Assert.Equal(result, model.IsCreate);
+            Assert.Equal(id == 0, model.IsCreate);
         }
 
-        /*[Fact]
-        public void IndexTest()
+        [Fact]
+        public async Task IndexTest()
         {
             InitController();
-            eventUiRepoMock.Setup(s => s.Get("")).Returns(new List<EventUi>());
-            var action = sut.Index();
+            eventUiRepoMock.Setup(s => s.Get("")).Returns(Task.FromResult<IEnumerable<EventUi>>(new List<EventUi>().ToArray()));
+            var action = await sut.Index(new IndexViewModel());
             var viewResult = Assert.IsType<ViewResult>(action);
             var model = Assert.IsType<IndexViewModel>(viewResult.ViewData.Model);
             Assert.NotNull(model);
-        }*/
+        }
 
         /**
          *  Sort

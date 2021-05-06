@@ -72,7 +72,7 @@
         <div class="form-group row justify-content-center">
             <label class="col-sm-3 col-form-label font-weight-bold">Description of the event</label>
             <div class="col-sm-5">
-                @Html.EditorFor(m => m.EventUi.Description, new { htmlAttributes = new { @class = "form-control", placeholder = "Description of the event", rows = "6", cols = "50", maxlength = "500" } })
+                @Html.TextAreaFor(m => m.EventUi.Description, new { @class = "form-control", placeholder = "Description of the event", rows = "6", cols = "50", maxlength = "500" })
                 <small id="descriptionHelp" class="form-text text-muted">Maximum of 500 characters</small>
             </div>
         </div>

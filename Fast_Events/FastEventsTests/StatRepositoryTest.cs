@@ -5,9 +5,7 @@ using FastEvents.DataAccess.EfModels;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using FastEvents.dbo;
 using StatByEvent = FastEvents.DataAccess.EfModels.StatByEvent;
-using FastEvents.DataAccess.Interfaces;
 
 namespace FastEventsTests
 {

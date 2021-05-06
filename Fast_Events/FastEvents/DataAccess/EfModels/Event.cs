@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using FastEvents.dbo.Interfaces;
 
 #nullable disable
 
 namespace FastEvents.DataAccess.EfModels
 {
-    public partial class Event
+    public partial class Event: IObjectWithId
     {
         public Event()
         {

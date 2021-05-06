@@ -78,19 +78,23 @@ namespace FastEventsTests
 
             }
         }
+        
         [Theory]
         [ClassData(typeof(EventClassData))]
         public async void DeleteAlongWithReferencesTest(List<Event> events, List<Stat> stats, List<Ticket> tickets,long EventId, bool expected)
         {
             var contextMock = new Mock<FastEventContext>();
             var setMock = DbSetMock.GetQueryableMockDbSet(events);
-
+            var setTicketsMock = DbSetMock.GetQueryableMockDbSet(tickets);
+            var setStatMock = DbSetMock.GetQueryableMockDbSet(stats);
 
             var loggerMock = new Mock<ILogger<EventRepository>>();
             var mapperMock = new Mock<IMapper>();
 
             contextMock.Setup(c => c.Events).Returns(setMock);
-
+            contextMock.Setup(c => c.Tickets).Returns(setTicketsMock);
+            contextMock.Setup(c => c.Stats).Returns(setStatMock);
+            contextMock.Setup(c => c.Set<Event>()).Returns(setMock);
 
             var sut = new EventRepository(contextMock.Object, loggerMock.Object, mapperMock.Object);
             Assert.Equal(await sut.DeleteAlongWithReferences(EventId), expected);
