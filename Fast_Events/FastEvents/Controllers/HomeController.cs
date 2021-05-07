@@ -49,7 +49,7 @@ namespace FastEvents.Controllers
 
 
         /**
-         *  Data access
+         *  Utils
          */
         private void GetUserIdFromCookies()
         {
@@ -66,7 +66,7 @@ namespace FastEvents.Controllers
                 _userId = value;
         }
 
-        private string TruncateFilename(string filename)
+        private static string TruncateFilename(string filename)
         {
             return filename.Length <= 50 ? filename : filename.Substring(filename.Length - 49, 49);
         }
