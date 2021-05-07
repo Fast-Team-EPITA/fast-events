@@ -34,6 +34,9 @@
                             <td colspan="2" class="h2">@ticket.Event.Name</td>
                         </tr>
                         <tr>
+                            <td colspan="2" class="h2">@ticket.Event.StartDate</td>
+                        </tr>
+                        <tr>
                             <td>
                                 <form method="post" colspan="2">
                                     <button class="btn btn-primary btn-md" asp-action="Detail" asp-route-eventId="@ticket.EventId">Go to event page</button>
