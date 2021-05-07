@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>FastEvents</RootNamespace>
+    <UserSecretsId>e4f8735b-8df1-4d58-ae40-8c8e65ff7ee5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

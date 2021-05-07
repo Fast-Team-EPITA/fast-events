@@ -66,6 +66,10 @@ namespace FastEvents.Controllers
                 _userId = value;
         }
 
+        private string TruncateFilename(string filename)
+        {
+            return filename.Length <= 50 ? filename : filename.Substring(filename.Length - 49, 49);
+        }
 
         /**
          *  View Navigation
@@ -181,7 +185,7 @@ namespace FastEvents.Controllers
                 return View("CreateOrEdit", viewModel);
 
             var fileName = viewModel.PictureFile != null
-                ? viewModel.PictureFile.FileName
+                ? TruncateFilename(viewModel.PictureFile.FileName)
                 : viewModel.EventUi.PictureFilename ?? "event_place_holder.jpg";
             if (viewModel.PictureFile != null)
                 await using (var stream = System.IO.File.Create(Path.Join(ImagesPath, fileName)))

@@ -5,7 +5,7 @@
     [start_date]       DATETIME      NOT NULL,
     [end_date]         DATETIME      NOT NULL,
     [capacity]         INT           NOT NULL,
-    [location]         VARCHAR (50)  NOT NULL,
+    [location]         VARCHAR (200)  NOT NULL,
     [description]      VARCHAR (500) NOT NULL,
     [picture_filename] VARCHAR (50)  NOT NULL,
     [owner_uuid]       VARCHAR (50)  NOT NULL,

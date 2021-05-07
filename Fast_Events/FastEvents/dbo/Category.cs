@@ -4,7 +4,7 @@
     {
         Concert,
         Conference,
-        OpenAir,
+        Show,
         Festival,
         Ceremony,
         Charity,
