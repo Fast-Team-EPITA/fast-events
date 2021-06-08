@@ -19,7 +19,7 @@ jobs:
           working_directory: ~/Fast_Events
           name: Run tests
           command: |
-            dotnet test
+            ls
             
 
 workflows:
