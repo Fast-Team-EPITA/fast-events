@@ -1,5 +1,3 @@
-Test
-
 #  Prérequis
 - Instance SQL serveur
 - ASP.NET Core 5.0 Runtime : https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-aspnetcore-5.0.5-windows-hosting-bundle-installer
