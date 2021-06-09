@@ -36,9 +36,9 @@ jobs:
             
       - discord/status:
           fail_only: false
-          failure_message: "Build failed"
+          failure_message: "**${CIRCLE_USERNAME}**'s build: **${CIRCLE_JOB}** failed."
           webhook: "${DISCORD_STATUS_WEBHOOK}"
-          success_message: "All tests passed !"    
+          success_message: "**${CIRCLE_JOB}** deployed, all tests passed !"    
 
 workflows:
   # Below is the definition of your workflow.
