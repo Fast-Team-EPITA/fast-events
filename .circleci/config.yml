@@ -18,6 +18,11 @@ jobs:
           working_directory: /root/project/Fast_Events
           name: Restore
           command: dotnet restore
+
+      - run:
+          working_directory: /root/project/Fast_Events
+          name: Dependency
+          command: apt-get install -y libgdiplus
           
       # Then simply use the dotnet container as you'd expect and run your tests
       - run:
