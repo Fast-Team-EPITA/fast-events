@@ -38,7 +38,7 @@ jobs:
           fail_only: false
           failure_message: "**${CIRCLE_USERNAME}**'s build: **${CIRCLE_JOB}** failed."
           webhook: "${DISCORD_STATUS_WEBHOOK}"
-          success_message: "**${CIRCLE_JOB}** deployed, all tests passed !"    
+          success_message: "**${CIRCLE_USERNAME}** started build, **${CIRCLE_JOB}** deployed, all tests passed !"    
 
 workflows:
   # Below is the definition of your workflow.
