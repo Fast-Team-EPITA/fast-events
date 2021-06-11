@@ -207,6 +207,7 @@ namespace FastEvents.Controllers
          */
         public List<EventUi> SortByCategory(Category? category, List<EventUi> events)
         {
+            //return events.Where((ev) => ev.Category != category).ToList(); //TODO broken version test
             return events.Where((ev) => ev.Category == category).ToList();
         }
 
